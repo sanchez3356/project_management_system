@@ -28,19 +28,19 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $projects = projects::all(); // Assuming you have a "Project" model
+        $projects = projects::with('clients','phases.tasks')->get(); // Assuming you have a "projects" model
         $projectCount = Projects::count(); // Assuming "Project" is your Eloquent model
 
         // Retrieve the project types from the database
-        $projectTypes = project_types::all(); // Assuming "ProjectType" is your Eloquent model
+        $projectTypes = project_types::get(); // Assuming "ProjectType" is your Eloquent model
 
 
         // Retrieve the clients from the database
-        $clients = clients::all(); // Assuming "clients" is your Eloquent model
+        $clients = clients::get(); // Assuming "clients" is your Eloquent model
         $clientsCount = clients::count(); // Assuming "clients" is your Eloquent model
 
         // // Retrieve the inbox from the database
-        $inbox = inbox::all(); // Assuming "inbox" is your Eloquent model
+        $inbox = inbox::get(); // Assuming "inbox" is your Eloquent model
         $inboxCount = inbox::count(); // Assuming "inbox" is your Eloquent model
         $pageTitle = "Home";
 

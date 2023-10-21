@@ -134,7 +134,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <div id="projectProgressChart" data-url="{{ route('records.project') }}"></div>
+                <div id="projectProgressChart" data-url="{{ route('records.finance') }}"></div>
             </div>
         </div>
     </div>
@@ -384,8 +384,8 @@
                         <th>Project</th>
                         <th>Deadline</th>
                         <th>Progress</th>
-                        <th>Lead</th>
-                        <th>Team</th>
+                        <th>Client</th>
+                        <th>Rate</th>
                         <th>Status</th>
                         <th class="dtr-hidden" style="width: 0px; display: none">
                             Action
@@ -393,8 +393,11 @@
                     </thead>
                     <tbody>
                         @foreach($projects as $project)
+                        @php
+                        $progress = project_progress($project);
+                        @endphp
                         <tr class="odd">
-                            <td class="project-title dtr-control">
+                            <td class="project-title dt-control">
                                 <h6 class="fs-6 mb-0">{{ $project->project_title }}</h6>
                                 <small>Created {{ formatMyDate($project->start_date) }}</small>
                             </td>
@@ -402,41 +405,29 @@
                             <td>
                                 <div class="progress" style="height: 5px">
                                     <div class="progress-bar progress-bar-warning" role="progressbar"
-                                        aria-valuenow="{{ $project->rate }}" aria-valuemin="0" aria-valuemax="100"
-                                        style="width: {{ $project->rate }}%">
+                                        aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"
+                                        style="width: {{ $progress }}%">
                                     </div>
                                 </div>
-                                <small>Completion with: {{ $project->rate }}%</small>
+                                <small>Completion with: {{ $progress }}%</small>
                             </td>
                             <td>
-                                <img class="avatar rounded" src="./avatar2.jpg" data-bs-toggle="tooltip"
-                                    data-bs-placement="left" alt="Avatar" aria-label="Team Lead"
-                                    data-bs-original-title="Team Lead" />
+                                <img class="avatar rounded" src="{{ $clients->avatar }}" data-bs-toggle="tooltip"
+                                    data-bs-placement="left" alt="Avatar" aria-label="{{ $clients->username }}"
+                                    data-bs-original-title="{{ $clients->username }}" />
                             </td>
-                            <td>
-                                <ul class="list-unstyled team-info mb-0 d-flex">
-                                    <li>
-                                        <img src="./avatar3.jpg" alt="avatar" />
-                                    </li>
-                                    <li>
-                                        <img src="./avatar1.jpg" alt="avatar" />
-                                    </li>
-                                    <li>
-                                        <img src="./avatar5.jpg" alt="avatar" />
-                                    </li>
-                                    <li>
-                                        <img src="./avatar4.jpg" alt="avatar" />
-                                    </li>
-                                </ul>
-                            </td>
+                            <td>{{ $project->rate }} </td>
                             <td><span class="badge bg-warning">{{ $project->status }}</span></td>
-                            <td class="project-actions dtr-hidden" style="display: none">
-                                <a href="project-detail.html" class="btn btn-sm btn-outline-secondary"><i
-                                        class="fa fa-eye"></i></a>
-                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-success"><i
-                                        class="fa fa-pencil"></i></a>
-                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger"><i
-                                        class="fa fa-trash"></i></a>
+                            <td class="project-actions dt-hidden">
+                                <button data-route="{{ route('projects.show', $transaction->id) }}"
+                                    data-id="{{ $project->id }}" class="btn btn-sm btn-outline-secondary"><i
+                                        class="fa fa-eye" disabled></i></button>
+                                <button data-route="{{ route('projects.edit', $transaction->id) }}"
+                                    data-id="{{ $project->id }}" class="btn btn-sm btn-outline-success"><i
+                                        class="fa fa-pencil"></i></button>
+                                <button data-route="{{ route('projects.destroy', $transaction->id) }}"
+                                    data-id="{{ $project->id }}" class="btn btn-sm btn-outline-danger delete-item"><i
+                                        class="fa fa-trash"></i></button>
                             </td>
                         </tr>
                         @endforeach

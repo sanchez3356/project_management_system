@@ -9,9 +9,28 @@ const pageCode = {
             },
         });
         updateProgressBars();
-        let table = new DataTable("#pro_list", {
-            // options
+        // Formatting function for row details - modify as you need
+        function format(d) {
+            return "<div>-- Action " + d[6] + "</div>";
+        }
+        // Initialize the DataTable
+        var table = $("#pro_list").DataTable();
+
+        // Handle click events to toggle child rows
+        // Add event listener for opening and closing details
+        table.on("click", "td.dt-control", function (e) {
+            let tr = e.target.closest("tr");
+            let row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+            } else {
+                // Open this row
+                row.child(format(row.data())).show();
+            }
         });
+
         // Fetch your finance data or use the variable passed from the Blade template
         const url = $("#projectProgressChart").data("url");
         fetchData(url, (data) => {
@@ -185,11 +204,28 @@ const pageCode = {
         // Sales income line chart
     },
     Projects: function () {
-        $("#project_list").DataTable({
-            searching: true, // Enable search
-            ordering: true, // Enable sorting
-            paging: true, // Enable pagination
+        function format(d) {
+            console.log(d);
+            return "<div>-- Action " + d[6] + "</div>";
+        }
+        // Initialize the DataTable
+        var table = $("#project_list").DataTable();
+
+        // Handle click events to toggle child rows
+        // Add event listener for opening and closing details
+        table.on("click", "td.dt-control", function (e) {
+            let tr = e.target.closest("tr");
+            let row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+            } else {
+                // Open this row
+                row.child(format(row.data())).show();
+            }
         });
+
     },
     ProjectsAdd: function () {},
     Profile: function () {
@@ -313,99 +349,6 @@ const pageCode = {
             });
         });
     },
-    ProjectsDetails: function () {
-        $("#phase_form").on("submit", function (e) {
-            e.preventDefault(); // Prevent the default form submission
-
-            // Get the CSRF token from the meta tag
-            var csrfToken = $('meta[name="csrf-token"]').attr("content");
-            console.log(csrfToken);
-            console.log($(this).serialize());
-
-            $.ajax({
-                type: "POST",
-                url: $(this).attr("action"),
-                data: $(this).serialize(), // Serialize form data
-                headers: {
-                    "X-CSRF-TOKEN": csrfToken, // Include the CSRF token in the headers
-                },
-                success: function (response) {
-                    console.log(response);
-                    if (response.success) {
-                        console.log(response.success);
-                        // Form submission was successful, do something
-                        alert("Form submitted successfully");
-                    } else if (response.errors) {
-                        console.log(response.errors);
-                        // Display validation errors dynamically
-                        $.each(response.errors, function (field, errorMessage) {
-                            var errorField = $("#" + field + "-error");
-                            errorField.text(errorMessage);
-                        });
-                    }
-                },
-                error: function () {
-                    // Handle any AJAX errors
-                    alert("An error occurred while submitting the form.");
-                },
-            });
-        });
-        $("#activity_form").on("submit", function (e) {
-            e.preventDefault(); // Prevent the default form submission
-
-            // Get the CSRF token from the meta tag
-            var csrfToken = $('meta[name="csrf-token"]').attr("content");
-            console.log(csrfToken);
-            console.log($(this).serialize());
-
-            $.ajax({
-                type: "POST",
-                url: $(this).attr("action"),
-                data: $(this).serialize(), // Serialize form data
-                headers: {
-                    "X-CSRF-TOKEN": csrfToken, // Include the CSRF token in the headers
-                },
-                success: function (response) {
-                    console.log(response);
-                    if (response.success) {
-                        // Reset the form
-                        $("#activity_form")[0].reset();
-                        // form[0].reset();
-                        // Form submission was successful, do something
-                        $("#messages").html(
-                            '<div class="alert alert-success alert-dismissible fade show">' +
-                                response.success +
-                                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
-                        );
-                        alert("Form submitted successfully");
-                    } else if (response.errors) {
-                        console.log(response.errors);
-                        // Display validation errors dynamically
-                        $.each(response.errors, function (field, errorMessage) {
-                            var errorField = $("#" + field + "-error");
-                            errorField.text(errorMessage);
-                        });
-                        $.each(response.errors, function (field, errorMessage) {
-                            // Use the same messages div to display errors
-                            $("#messages").html(
-                                '<div class="alert alert-danger alert-dismissible fade show">' +
-                                    errorMessage +
-                                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
-                            );
-                        });
-                    }
-                },
-                error: function () {
-                    // Handle any AJAX errors
-                    // Handle any AJAX errors
-                    $("#messages").html(
-                        '<div class="alert alert-danger alert-dismissible fade show">An error occurred while submitting the form<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
-                    );
-                    alert("An error occurred while submitting the form.");
-                },
-            });
-        });
-    },
     ClientProfile: function () {
         // circular progress bar
         var profileChart = document.querySelector("#profileCircle");
@@ -431,31 +374,27 @@ const pageCode = {
         // circular progress bar
     },
     Finances: function () {
+        // Formatting function for row details - modify as you need
+        function format(d) {
+            return "<div>-- Action " + d[6] + "</div>";
+        }
         // Initialize the DataTable
-        var table = $("#transactions_list").DataTable({
-            columnDefs: [
-                {
-                    targets: "actions",
-                    visible: false, // Initially hide the actions column
-                },
-            ],
-        });
+        var table = $("#transactions_list").DataTable();
 
-        // Handle click events on the first column to toggle actions
-        $("#transactions_list tbody").on(
-            "click",
-            "td.account-name",
-            function () {
-                var tr = $(this).closest("tr");
-                var row = table.row(tr);
-                var actionsColumn = row
-                    .node()
-                    .getElementsByClassName("actions")[0];
+        // Handle click events to toggle child rows
+        // Add event listener for opening and closing details
+        table.on("click", "td.dt-control", function (e) {
+            let tr = e.target.closest("tr");
+            let row = table.row(tr);
 
-                // Toggle the visibility of the actions column
-                $(actionsColumn).toggle();
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+            } else {
+                // Open this row
+                row.child(format(row.data())).show();
             }
-        );
+        });
         submitFormWithAjax("#account_form", function (response) {
             alert(response);
         });
@@ -470,7 +409,6 @@ const pageCode = {
 
             const seriesData = accounts.map((account) => {
                 const transactions = data[account];
-                console.log(transactions);
 
                 return {
                     name: account,
@@ -489,7 +427,8 @@ const pageCode = {
             // Create the ApexCharts line graph with the formatted data
             const options = {
                 chart: {
-                    type: "line",
+                    height: 350,
+                    type: "area",
                 },
                 xaxis: {
                     type: "datetime",
@@ -520,61 +459,6 @@ const pageCode = {
             console.log(chart);
 
             chart.render();
-        });
-        $("#addRecord").on("submit", function (e) {
-            e.preventDefault(); // Prevent the default form submission
-
-            // Get the CSRF token from the meta tag
-            var csrfToken = $('meta[name="csrf-token"]').attr("content");
-            console.log(csrfToken);
-            console.log($(this).serialize());
-
-            $.ajax({
-                type: "POST",
-                url: $(this).attr("action"),
-                data: $(this).serialize(), // Serialize form data
-                headers: {
-                    "X-CSRF-TOKEN": csrfToken, // Include the CSRF token in the headers
-                },
-                success: function (response) {
-                    console.log(response);
-                    if (response.success) {
-                        // Reset the form
-                        $("#addRecord")[0].reset();
-                        // form[0].reset();
-                        // Form submission was successful, do something
-                        $("#messages").html(
-                            '<div class="alert alert-success alert-dismissible fade show">' +
-                                response.success +
-                                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
-                        );
-                        alert("Form submitted successfully");
-                    } else if (response.errors) {
-                        console.log(response.errors);
-                        // Display validation errors dynamically
-                        $.each(response.errors, function (field, errorMessage) {
-                            var errorField = $("#" + field + "-error");
-                            errorField.text(errorMessage);
-                        });
-                        $.each(response.errors, function (field, errorMessage) {
-                            // Use the same messages div to display errors
-                            $("#messages").html(
-                                '<div class="alert alert-danger alert-dismissible fade show">' +
-                                    errorMessage +
-                                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
-                            );
-                        });
-                    }
-                },
-                error: function () {
-                    // Handle any AJAX errors
-                    // Handle any AJAX errors
-                    $("#messages").html(
-                        '<div class="alert alert-danger alert-dismissible fade show">An error occurred while submitting the form<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
-                    );
-                    alert("An error occurred while submitting the form.");
-                },
-            });
         });
     },
     Inbox: function () {

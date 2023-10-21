@@ -34,7 +34,7 @@ class ProjectsController extends Controller
     {
         // Show the form for creating a new project (projects-grid.blade.php).
         // Retrieve the number of projects from your database
-        $projects = Projects::all(); // Assuming "Projects" is your Eloquent model
+        $projects = projects::with('clients', 'phases.tasks')->get(); // Assuming "projects" is your Eloquent model
         $projectCount = Projects::count(); // Assuming "Projects" is your Eloquent model
 
         // Retrieve the project types from the database
@@ -169,20 +169,17 @@ class ProjectsController extends Controller
     public function edit(string $id)
     {
         // Use the $id variable to retrieve the project with the specific ID
-        $project = projects::find($id);
+        $project = Projects::with('phases.tasks')->find($id);
         $projectCount = Projects::count(); // Assuming "Project" is your Eloquent model
         $projectTypes = project_types::all(); // Assuming "ProjectType" is your Eloquent model
         $clients = clients::all(); // Assuming "clients" is your Eloquent model
         if ($project) {
-            // Retrieve all tasks with the 'project' column matching $id
-            $tasks = tasks::where('project', $id)->get();
-
             // Get the client whose ID matches the 'client' column in the project row
             $client = clients::find($project->client);
             // Now you have the project, its tasks, and its client
             $pageTitle = "ProjectsAdd";
 
-            return view('pages.projects-add', compact('project', 'clients', 'projectTypes', 'tasks', 'client', 'id', 'projectCount', 'pageTitle'));
+            return view('pages.projects-add', compact('project', 'clients', 'projectTypes', 'client', 'projectCount', 'pageTitle'));
 
         } else {
             // Handle the case where no project is found with the given ID
@@ -205,7 +202,6 @@ class ProjectsController extends Controller
                 'end_date' => 'required|date|after:start_date',
                 'project_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 // 'project_image' => 'image|max:2048',
-                // Allow images up to 2MB
                 'project_description' => 'required',
                 'project_type' => 'required|numeric|exists:project_type,id',
                 'priority' => 'required',

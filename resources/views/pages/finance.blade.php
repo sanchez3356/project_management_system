@@ -63,7 +63,7 @@
                         @foreach ($accounts as $account)
                         @foreach ($account->transactions as $transaction)
                         <tr class="{{ $rowClass }}">
-                            <td class="account_name text-center">
+                            <td class="account_name dt-control text-start ps-4">
                                 <h6 class="fs-6 mb-0">{{ $account->account_name }}</h6>
                             </td>
                             <td>{{ $transaction->amount }}</td>
@@ -71,13 +71,17 @@
                             <td>{{ $transaction->transaction_type }}</td>
                             <td>{{ $transaction->payment_method }}</td>
                             <td>{{ $transaction->description }}</td>
-                            <td class="transactions-actions dtr-hidden" style="display: none" colspan="6">
-                                <a href="project-detail.html" class="btn btn-sm btn-outline-secondary"><i
-                                        class="fa fa-eye"></i></a>
-                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-success"><i
-                                        class="fa fa-pencil"></i></a>
-                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger"><i
-                                        class="fa fa-trash"></i></a>
+                            <td class="transactions-actions dt-hidden" style="display: none" colspan="6">
+                                <button data-route="{{ route('finances.show', $transaction->id) }}"
+                                    data-id="{{ $transaction->id }}" class="btn btn-sm btn-outline-secondary"><i
+                                        class="fa fa-eye" disabled></i></button>
+                                <button data-route="{{ route('finances.edit', $transaction->id) }}"
+                                    data-id="{{ $transaction->id }}" class="btn btn-sm btn-outline-success"><i
+                                        class="fa fa-pencil"></i></button>
+                                <button data-route="{{ route('finances.destroy', $transaction->id) }}"
+                                    data-id="{{ $transaction->id }}"
+                                    class="btn btn-sm btn-outline-danger delete-item"><i
+                                        class="fa fa-trash"></i></button>
                             </td>
                         </tr>
                         @php

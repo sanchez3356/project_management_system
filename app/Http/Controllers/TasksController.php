@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\tasks;
+use App\Models\projects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -14,14 +15,22 @@ class TasksController extends Controller
      */
     public function index()
     {
-        // Retrieve the inbox from the database
-        $tasks = tasks::all(); // Assuming "inbox" is your Eloquent model
-        $taskCount = tasks::count(); // Assuming "inbox" is your Eloquent model
+        // Retrieve the number of projects from your database
+        $plannedTasks = tasks::where('status', 'planned')
+            ->with('phases.projects')
+            ->get();
+
+        $inProgressTasks = tasks::where('status', 'in progress')
+            ->with('phases.projects')
+            ->get();
+
+        $completedTasks = tasks::where('status', 'completed')
+            ->with('phases.projects')
+            ->get();
+
         $pageTitle = "Tasks";
 
-
-        // You can pass both the project types and project count to the view
-        return view('pages.taskboard', compact('tasks', 'taskCount', 'pageTitle'));
+        return view('pages.taskboard', compact('plannedTasks', 'inProgressTasks', 'completedTasks', 'pageTitle'));
     }
 
     /**
@@ -41,14 +50,16 @@ class TasksController extends Controller
         $rules = [
             'task' => 'required|max:255|string',
             'description' => 'required|max:255|string',
-            'phase' => 'required|exists:phases,id', // Check if the "phase" exists in the "phases" table
+            'phase' => 'required|exists:phases,id',
+            // Check if the "phase" exists in the "phases" table
             'order' => 'string',
             'image' => 'string',
             'file' => 'file|mimes:pdf,doc,docx',
             'deadline' => 'nullable|max:100|date',
-            'status' => 'required|max:255|string', // "status" should be a string
+            'status' => 'required|max:255|string',
+            // "status" should be a string
         ];
-        
+
         // Create a validator instance with your data and rules
         $validator = Validator::make($request->all(), $rules);
 
@@ -62,7 +73,7 @@ class TasksController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $filename = time() . '_' . $file->getClientOriginalName();
-        
+
             // Store the file in the "app/storage/public/status" folder
             $file->storeAs('public/status', $filename);
             // Update the "file" field in your database with the stored file path

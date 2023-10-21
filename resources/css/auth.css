@@ -1,0 +1,152 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+:root {
+    --dark-color: #323a45;
+    /* Custom dark color */
+    --color-fff: #ffffff;
+    /* Custom white color */
+    --color-100: #f0f0f0;
+    /* Custom light color 100 */
+    --color-200: #eeeeee;
+    /* Custom light color 200 */
+    --color-300: #e0e0e0;
+    /* Custom light color 300 */
+    --color-400: #bdbdbd;
+    /* Custom light color 400 */
+    --color-500: #555555;
+    /* Custom color 500 */
+    --color-600: #757575;
+    /* Custom color 600 */
+    --color-700: #616161;
+    /* Custom color 700 */
+    --color-800: #424242;
+    /* Custom color 800 */
+    --color-900: #212121;
+    /* Custom color 900 */
+    --color-000: #000000;
+    /* Custom color 000 (black) */
+    --border-color: #f0f0f0;
+    /* Custom border color */
+    --card-color: #ffffff;
+    /* Custom card background color */
+    --body-color: #eff0f2;
+    /* Custom body background color */
+    --theme-color: #fefefe;
+    /* Custom white color */
+    --white-color: #ffffff;
+    /* Custom white color */
+    --sidebar-color: #fcfcfc;
+    /* Custom sidebar background color */
+    --hc-font-color: #555555;
+    /* Custom high-contrast font color */
+    --hc-bg-color: #f0f0f0;
+    /* Custom high-contrast background color */
+    --bs-gradient: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.15),
+        rgba(0, 0, 0, 0.35)
+    );
+    /* Custom gradient background */
+}
+
+input,
+button,
+select,
+optgroup,
+textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+[class="theme-cyan"] {
+    --primary-color: #f26513;
+    --secondary-color: #feefe8;
+    --chart-color1: #4ad379;
+    --chart-color2: #735ee9;
+    --chart-color3: #e271fd;
+    --chart-color4: #5e44ef;
+    --chart-color5: #5e44ef;
+    --primary-gradient: linear-gradient(
+        to right,
+        var(--primary-color) -20%,
+        var(--secondary-color),
+        var(--body-color)
+    );
+}
+.bg-chart1 {
+    background-color: var(--chart-color1);
+}
+.bg-chart2 {
+    background-color: var(--chart-color2);
+}
+.bg-chart3 {
+    background-color: var(--chart-color3);
+}
+.bg-chart4 {
+    background-color: var(--chart-color4);
+}
+.bg-chart5 {
+    background-color: var(--chart-color5);
+}
+a {
+    text-decoration: none;
+}
+.btn.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.btn-light:hover {
+    background-color: var(--color-400);
+}
+.auth-main::before {
+    background: rgba(23, 25, 28, 0.9);
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 350px;
+    height: calc(100% - 40px);
+    z-index: -1;
+    margin: 20px;
+}
+
+@media (max-width: 575.98px) {
+    .auth-main::before {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+}
+
+.auth-box {
+    height: auto;
+    width: 380px;
+    margin-left: 130px;
+}
+.auth-box .logo {
+    width: 130px;
+    display: block;
+}
+
+.auth-box .logo path {
+    fill: var(--color-fff);
+    width: 130px;
+}
+
+@media (max-width: 767.98px) {
+    .auth-box {
+        width: 80%;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .auth-box {
+        width: 90%;
+    }
+}

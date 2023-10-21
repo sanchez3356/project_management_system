@@ -34,11 +34,8 @@ const pageCode = {
         // Fetch your finance data or use the variable passed from the Blade template
         const url = $("#projectProgressChart").data("url");
         fetchData(url, (data) => {
-            // Process the data or perform actions with it
-            const projects = data;
-            console.log(projects);
-
-            const seriesData = projects.map((project) => {
+            // Process the data and format it for the chart
+            const seriesData = data.map((project) => {
                 return {
                     name: project.project_name,
                     data: project.phases.map((phase) => {
@@ -49,19 +46,26 @@ const pageCode = {
                     }),
                 };
             });
-            console.log(seriesData);
-
-            // Create the ApexCharts line graph with the formatted data
+        
+            // Create chart options
             const options = {
+                series: seriesData,
                 chart: {
-                    type: "line",
+                    height: 350,
+                    type: 'area',
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                stroke: {
+                    curve: 'smooth',
                 },
                 xaxis: {
-                    type: "datetime",
+                    type: 'datetime',
                 },
                 tooltip: {
                     x: {
-                        format: "dd MMM yyyy",
+                        format: 'dd MMM yyyy',
                     },
                     y: {
                         title: {
@@ -72,20 +76,14 @@ const pageCode = {
                     },
                 },
             };
-            console.log(options);
-
-            const chart = new ApexCharts(
-                document.querySelector("#projectProgressChart"),
-                {
-                    options: options,
-                    series: seriesData,
-                }
-            );
-            console.log(chart);
-
+        
+            // Create the ApexCharts instance
+            const chart = new ApexCharts(document.querySelector("#projectProgressChart"), options);
+        
+            // Render the chart
             chart.render();
         });
-
+                
         // Function to calculate phase completion based on task statuses
         function calculatePhaseCompletion(tasks) {
             const totalTasks = tasks.length;
@@ -225,7 +223,6 @@ const pageCode = {
                 row.child(format(row.data())).show();
             }
         });
-
     },
     ProjectsAdd: function () {},
     Profile: function () {
@@ -422,42 +419,39 @@ const pageCode = {
                     }),
                 };
             });
-            console.log(seriesData);
 
             // Create the ApexCharts line graph with the formatted data
             const options = {
+                series: seriesData,
                 chart: {
                     height: 350,
-                    type: "area",
+                    type: 'line',
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                stroke: {
+                    curve: 'smooth',
                 },
                 xaxis: {
-                    type: "datetime",
+                    type: 'datetime',
                 },
                 tooltip: {
                     x: {
-                        format: "dd MMM yyyy",
+                        format: 'dd MMM yyyy',
                     },
                     y: {
                         title: {
                             formatter: (value) => {
-                                return "Amount: $" + value;
+                                return "Phase Completion: " + value + "%";
                             },
                         },
                     },
                 },
-                // Additional chart options...
             };
-
-            const chart = new ApexCharts(
-                document.querySelector("#financeChart"),
-                {
-                    options: options,
-                    series: seriesData,
-                }
-            );
-
-            console.log(chart);
-
+        
+            // Create the ApexCharts instance
+            const chart = new ApexCharts(document.querySelector("#financeChart"), options);
             chart.render();
         });
     },

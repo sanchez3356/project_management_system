@@ -122,13 +122,16 @@
                     <ul class="dropdown-menu dropdown-menu-end dropstart dropdown-menu-dark"
                         aria-labelledby="dropdownMenuButton1">
                         <li>
-                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="{{ route('finances.index') }}">Finances</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addAccount">Create
+                                Account</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#addTransaction">New
+                                transaction</a>
                         </li>
                     </ul>
                 </div>
@@ -367,13 +370,14 @@
                     <ul class="dropdown-menu dropdown-menu-end dropstart dropdown-menu-dark"
                         aria-labelledby="dropdownMenuButton1">
                         <li>
-                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#projectsAdd">Add
+                                Project</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="{ route('projects.index') }}">Projects list</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                            <a class="dropdown-item" href="{{ route('projects.grid') }}">Projects grid</a>
                         </li>
                     </ul>
                 </div>

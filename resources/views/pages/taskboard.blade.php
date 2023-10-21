@@ -10,7 +10,7 @@
             <div class="card-header d-flex justify-content-between my-2">
                 <h6 class="card-title">Planned</h6>
                 <ul class="header-dropdown">
-                    <li><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addTask"><i
+                    <li><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#taskModal"><i
                                 class="fas fa-circle-plus"></i></a></li>
                 </ul>
             </div>
@@ -44,7 +44,7 @@
             <div class="card-header d-flex justify-content-between my-2">
                 <h6 class="card-title">In progress</h6>
                 <ul class="header-dropdown">
-                    <li><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addTask"><i
+                    <li><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#taskModal"><i
                                 class="fas fa-circle-plus"></i></a></li>
                 </ul>
             </div>
@@ -78,7 +78,7 @@
             <div class="card-header text-light d-flex justify-content-between my-2">
                 <h6 class="card-title">Completed</h6>
                 <ul class="header-dropdown">
-                    <li><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addTask"><i
+                    <li><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#taskModal"><i
                                 class="fas fa-circle-plus text-light"></i></a></li>
                 </ul>
             </div>

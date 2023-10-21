@@ -6,11 +6,7 @@
 <!-- Clients list section start  -->
 <div class="row g-2 clearfix">
     <div class="col-12">
-        <?php 
-    // dd($accounts);
-    ?>
-
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5>{{$user->username }}'s Finances</h5>
                 <div class="dropdown">

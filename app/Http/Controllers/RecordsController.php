@@ -11,7 +11,7 @@ use App\Models\transactions;
 
 class RecordsController extends Controller
 {
-    public function getTransactionData()
+    public function transactions()
     {
         $user = Auth::user();
         $accounts = accounts::with('transactions')->where('user_id', $user->id)->get(); // Use 'get' to retrieve the results as a collection
@@ -31,7 +31,7 @@ class RecordsController extends Controller
         }
         return response()->json($data);
     }
-    public function getProjectsData()
+    public function projects()
     {
         $user = Auth::user();
 

@@ -51,9 +51,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('phases', PhaseController::class)->only(['store', 'destroy', 'update']);
     Route::resource('finances', FinanceController::class);
     Route::resource('accounts', AccountsController::class)->only(['edit', 'store', 'destroy']);
-    Route::get('/records', [RecordsController::class, 'projects'])->name('records.project');
-    Route::get('/records', [RecordsController::class, 'transactions'])->name('records.finance');
-    Route::post('/tasks', [TasksController::class, 'store'])->name('tasks.store');
+    Route::get('/records/project', [RecordsController::class, 'projects'])->name('records.project');
+    Route::get('/records/finance', [RecordsController::class, 'transactions'])->name('records.finance');
+        Route::post('/tasks', [TasksController::class, 'store'])->name('tasks.store');
     // Route::get('/records', [RecordsController::class, 'getTasksData'])->name('records.tasks');
     // Route::resource('activities', ActivitiesController::class)->only(['index', 'store', 'destroy']);
 });

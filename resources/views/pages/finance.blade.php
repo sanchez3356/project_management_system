@@ -44,7 +44,7 @@
                 <h6>{{$user->username }}'s Transaction records</h6>
             </div>
             <div class="card-body">
-                <table class="table table-hover dataTable no-footer dtr-inline collapsed" id="transactions_list">
+                <table class="table table-hover dataTable no-footer dt-inline collapsed" id="transactions_list">
                     <thead class="">
                         <th>Account</th>
                         <th>Amount</th>

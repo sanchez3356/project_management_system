@@ -134,7 +134,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <div id="projectProgressChart" data-url="{{ route('records.finance') }}"></div>
+                <div id="projectProgressChart" data-url="{{ route('records.project') }}"></div>
             </div>
         </div>
     </div>
@@ -379,25 +379,28 @@
                 </div>
             </div>
             <div class="card-body">
-                <table id="pro_list" class="table table-hover mb-0">
+                <table id="pro_list" class="table table-hover dataTable no-footer dt-inline collapsed mb-0">
                     <thead class="">
                         <th>Project</th>
                         <th>Deadline</th>
                         <th>Progress</th>
                         <th>Client</th>
                         <th>Rate</th>
-                        <th>Status</th>
-                        <th class="dtr-hidden" style="width: 0px; display: none">
+                        <th>Priority</th>
+                        <th class="dt-hidden" style="width: 0px; display: none">
                             Action
                         </th>
                     </thead>
                     <tbody>
+                        @php
+                        $rowClass = 'even';
+                        @endphp
                         @foreach($projects as $project)
                         @php
                         $progress = project_progress($project);
                         @endphp
-                        <tr class="odd">
-                            <td class="project-title dt-control">
+                        <tr class="{{ $rowClass }}">
+                            <td class="project-title dt-control ps-4 text-start">
                                 <h6 class="fs-6 mb-0">{{ $project->project_title }}</h6>
                                 <small>Created {{ formatMyDate($project->start_date) }}</small>
                             </td>
@@ -412,24 +415,25 @@
                                 <small>Completion with: {{ $progress }}%</small>
                             </td>
                             <td>
-                                <img class="avatar rounded" src="{{ $clients->avatar }}" data-bs-toggle="tooltip"
-                                    data-bs-placement="left" alt="Avatar" aria-label="{{ $clients->username }}"
-                                    data-bs-original-title="{{ $clients->username }}" />
+                                <img class="avatar rounded" src="./avatar2.jpg" data-bs-toggle="tooltip"
+                                    data-bs-placement="left" alt="Avatar" aria-label="Team Lead"
+                                    data-bs-original-title="Team Lead" />
                             </td>
                             <td>{{ $project->rate }} </td>
-                            <td><span class="badge bg-warning">{{ $project->status }}</span></td>
-                            <td class="project-actions dt-hidden">
-                                <button data-route="{{ route('projects.show', $transaction->id) }}"
-                                    data-id="{{ $project->id }}" class="btn btn-sm btn-outline-secondary"><i
-                                        class="fa fa-eye" disabled></i></button>
-                                <button data-route="{{ route('projects.edit', $transaction->id) }}"
-                                    data-id="{{ $project->id }}" class="btn btn-sm btn-outline-success"><i
-                                        class="fa fa-pencil"></i></button>
-                                <button data-route="{{ route('projects.destroy', $transaction->id) }}"
+                            <td><span class="badge bg-success">{{ $project->priority }}</span></td>
+                            <td class="project-actions dt-hidden" style="display: none">
+                                <a href="{{ route('projects.show', $project->id) }}"
+                                    class="btn btn-sm btn-outline-secondary"><i class="fa fa-eye"></i></a>
+                                <a href="{{ route('projects.edit', $project->id) }}"
+                                    class="btn btn-sm btn-outline-success"><i class="fa fa-pencil"></i></a>
+                                <button data-route="{{ route('projects.destroy', $project->id) }}"
                                     data-id="{{ $project->id }}" class="btn btn-sm btn-outline-danger delete-item"><i
                                         class="fa fa-trash"></i></button>
                             </td>
                         </tr>
+                        @php
+                        $rowClass = ($rowClass === 'even') ? 'odd' : 'even';
+                        @endphp
                         @endforeach
                     </tbody>
                 </table>

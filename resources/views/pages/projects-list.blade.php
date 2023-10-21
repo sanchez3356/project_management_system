@@ -11,14 +11,14 @@
         ?>
         <div class="card mb-4">
             <div class="card-body">
-                <table class="table table-hover dataTable no-footer dtr-inline collapsed" id="project_list">
+                <table class="table table-hover dataTable no-footer dt-inline collapsed" id="project_list">
                     <thead class="">
                         <th>Project Name</th>
                         <th>Deadline</th>
                         <th>Progress</th>
                         <th>Client</th>
                         <th>Rate</th>
-                        <th>Status</th>
+                        <th>Priority</th>
                         <th class="dt-hidden" style="width: 0px; display: none">
                             Action
                         </th>
@@ -52,8 +52,8 @@
                                     data-bs-original-title="Team Lead" />
                             </td>
                             <td>{{ $project->rate }} </td>
-                            <td><span class="badge bg-warning">{{ $project->status }}</span></td>
-                            <td class="project-actions dtr-hidden" style="display: none">
+                            <td><span class="badge bg-success">{{ $project->priority }}</span></td>
+                            <td class="project-actions dt-hidden" style="display: none">
                                 <a href="{{ route('projects.show', $project->id) }}"
                                     class="btn btn-sm btn-outline-secondary"><i class="fa fa-eye"></i></a>
                                 <a href="{{ route('projects.edit', $project->id) }}"

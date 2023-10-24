@@ -272,12 +272,12 @@
                             <option value="income">Income</option>
                             <option value="expenditure">Expenditure</option>
                         </select>
-                        <div class="text-danger" id="description-error"></div>
+                        <div class="text-danger" id="type-error"></div>
                     </div>
                     <div class="col-12">
-                        <textarea rows="2" name="description" id="description" class="form-control"
+                        <textarea rows="2" name="desc" id="desc" class="form-control"
                             placeholder="Please describe transaction ..."></textarea>
-                        <div class="text-danger" id="description-error"></div>
+                        <div class="text-danger" id="desc-error"></div>
                     </div>
                 </div>
             </div>

@@ -24,8 +24,8 @@
                 </ul>
             </div>
             @endif
-            @if(isset($id))
-            <form class="card-body" method="POST" action="{{ route('projects.update', $id) }}"
+            @if(isset($project))
+            <form class="card-body" method="POST" action="{{ route('projects.update', $project->id) }}"
                 enctype="multipart/form-data">
                 @method('PUT')
                 @else
@@ -137,7 +137,7 @@
                         </div>
                         <div class="col-sm-12">
                             <button type="submit" class="btn btn-primary">
-                                @if(isset($id))
+                                @if(isset($project))
                                 Update
                                 @else
                                 Create

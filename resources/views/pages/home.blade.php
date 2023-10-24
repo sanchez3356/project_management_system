@@ -1,13 +1,10 @@
 @extends('layouts.app')
 
 
-
 @section('content')
 <!--  Home section content start  -->
 <div class="row g-3 mb-2">
-    <div class="col-12">
-        <div id="search-results"></div>
-    </div>
+
     <div class="col-12">
         <!-- Slider container -->
         <div class="swiper-container p-3 position-relative overflow-hidden">
@@ -63,19 +60,16 @@
                                     data-bs-original-title="Chris Fox" />
                             </li>
                             <li>
-                                <img src="{{ asset('images//avatars/avatar5.jpg') }}" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" alt="Avatar" aria-label="oge Lucky"
-                                    data-bs-original-title="Joge Lucky" />
+                                <img src="" data-bs-toggle="tooltip" data-bs-placement="top" alt="Avatar"
+                                    aria-label="oge Lucky" data-bs-original-title="Joge Lucky" />
                             </li>
                             <li>
-                                <img src="{{ asset('images/avatars/avatar2.jpg') }}" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" alt="Avatar" aria-label="Folisise Chosielie"
-                                    data-bs-original-title="Folisise Chosielie" />
+                                <img src="" data-bs-toggle="tooltip" data-bs-placement="top" alt="Avatar"
+                                    aria-label="Folisise Chosielie" data-bs-original-title="Folisise Chosielie" />
                             </li>
                             <li>
-                                <img src="{{ asset('images/avatars/avatar1.jpg') }}" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" alt="Avatar" aria-label="Joge Lucky"
-                                    data-bs-original-title="Joge Lucky" />
+                                <img src="" data-bs-toggle="tooltip" data-bs-placement="top" alt="Avatar"
+                                    aria-label="Joge Lucky" data-bs-original-title="Joge Lucky" />
                             </li>
                         </ul>
                         <button type="button" class="btn btn-light btn-sm">
@@ -163,7 +157,7 @@
                 </div>
             </div>
             <div class="card-body d-flex justify-content-center align-items-center">
-                <div id="progressCircle"></div>
+                <div id="progressCircle" data-id="{{$completed}}"></div>
             </div>
         </div>
     </div>
@@ -241,71 +235,23 @@
     <div class="col-lg-4 col-md-6">
         <div class="card">
             <ul class="list-group list-group-custom list-group-flush list-group-custom">
-                <li class="list-group-item">
-                    <a href="app-inbox.html" class="d-flex justify-content-between align-items-center">
-                        <p class="mb-0">
-                            <i class="fa fa-envelope text-muted me-2"></i>Inbox
-                        </p>
-                        <span class="badge bg-success">695</span>
-                    </a>
+                @if (count($clients) === 0)
+                <div class="text-center p-4 text-danger bg-white">No Clients available ...</div>
+                @else
+                @foreach($clients as $key => $client)
+                <li class="list-group-item d-flex align-items-center">
+                    <div class="icon me-3">
+                        <img width="45px" height="47px"
+                            src="{{ asset('storage/' . $client->avatar) ?: asset('storage/avatars/male.png')}}"
+                            class="rounded-circle" alt="{{ $client->username }}'s avatar">
+                    </div>
+                    <div>
+                        <h6 class="mb-1">{{ $client->username }}</h6>
+                        <div class="text-muted">{{ $client->email }}</div>
+                    </div>
                 </li>
-                <li class="list-group-item">
-                    <a href="javascript:void(0);" class="d-flex justify-content-between align-items-center">
-                        <p class="mb-0">
-                            <i class="fa fa-eye text-muted me-2"></i>Profile
-                            visits
-                        </p>
-                        <span class="badge bg-info">364</span>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="javascript:void(0);" class="d-flex justify-content-between align-items-center">
-                        <p class="mb-0">
-                            <i class="fa fa-phone text-muted me-2"></i>Call
-                        </p>
-                        <span class="badge bg-warning">12</span>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="javascript:void(0);" class="d-flex justify-content-between align-items-center">
-                        <p class="mb-0">
-                            <i class="fas fa-comments text-muted me-2"></i>Messages
-                        </p>
-                        <span class="badge bg-danger">54</span>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="javascript:void(0);" class="d-flex justify-content-between align-items-center">
-                        <p class="mb-0">
-                            <i class="fa fa-bookmark text-muted me-2"></i>Bookmarks
-                        </p>
-                        <span class="badge bg-warning">19</span>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="javascript:void(0);" class="d-flex justify-content-between align-items-center">
-                        <p class="mb-0">
-                            <i class="fa fa-bell text-muted me-2"></i>Notifications
-                        </p>
-                        <span class="badge bg-info">56</span>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="javascript:void(0);" class="d-flex justify-content-between align-items-center">
-                        <p class="mb-0">
-                            <i class="fa fa-tag text-muted me-2"></i>New Project
-                        </p>
-                        <span class="badge bg-info">8</span>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="javascript:void(0);" class="d-flex justify-content-between align-items-center">
-                        <p class="mb-0">
-                            <i class="fa fa-clock-o text-muted me-2"></i>Watch
-                        </p>
-                        <span class="badge bg-info">25</span>
-                    </a>
-                </li>
+                @endforeach
+                @endif
             </ul>
         </div>
     </div>
@@ -419,9 +365,8 @@
                                 <small>Completion with: {{ $progress }}%</small>
                             </td>
                             <td>
-                                <img class="avatar rounded" src="./avatar2.jpg" data-bs-toggle="tooltip"
-                                    data-bs-placement="left" alt="Avatar" aria-label="Team Lead"
-                                    data-bs-original-title="Team Lead" />
+                                <img class="avatar rounded" src="" data-bs-toggle="tooltip" data-bs-placement="left"
+                                    alt="Avatar" aria-label="Team Lead" data-bs-original-title="Team Lead" />
                             </td>
                             <td>{{ $project->rate }} </td>
                             <td><span class="badge bg-success">{{ $project->priority }}</span></td>

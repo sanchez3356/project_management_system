@@ -46,26 +46,26 @@ const pageCode = {
                     }),
                 };
             });
-        
+
             // Create chart options
             const options = {
                 series: seriesData,
                 chart: {
                     height: 350,
-                    type: 'area',
+                    type: "area",
                 },
                 dataLabels: {
                     enabled: false,
                 },
                 stroke: {
-                    curve: 'smooth',
+                    curve: "smooth",
                 },
                 xaxis: {
-                    type: 'datetime',
+                    type: "datetime",
                 },
                 tooltip: {
                     x: {
-                        format: 'dd MMM yyyy',
+                        format: "dd MMM yyyy",
                     },
                     y: {
                         title: {
@@ -76,19 +76,21 @@ const pageCode = {
                     },
                 },
             };
-        
+
             // Create the ApexCharts instance
-            const chart = new ApexCharts(document.querySelector("#projectProgressChart"), options);
-        
+            const chart = new ApexCharts(
+                document.querySelector("#projectProgressChart"),
+                options
+            );
+
             // Render the chart
             chart.render();
         });
-                
+
         // Function to calculate phase completion based on task statuses
         function calculatePhaseCompletion(tasks) {
             const totalTasks = tasks.length;
             if (totalTasks === 0) return 0;
-            console.log(totalTasks);
 
             const completedTasks = tasks.filter(
                 (task) => task.status === "completed"
@@ -99,8 +101,10 @@ const pageCode = {
         }
         //Main page graph
         // circular progress bar
+        const data = $("#progressCircle").data("id");
+
         var options = {
-            series: [70],
+            series: [data],
             labels: ["Projects completed"],
             colors: ["var(--primary-color)"],
             chart: {
@@ -228,122 +232,49 @@ const pageCode = {
     Profile: function () {
         $("#countrySelect").select2();
 
-        $("#basic_info").on("submit", function (e) {
-            e.preventDefault(); // Prevent the default form submission
-
-            // Get the CSRF token from the meta tag
-            var csrfToken = $('meta[name="csrf-token"]').attr("content");
-            console.log(csrfToken);
-            console.log($(this).serialize());
-
-            $.ajax({
-                type: "POST",
-                url: $(this).attr("action"),
-                data: $(this).serialize(), // Serialize form data
-                headers: {
-                    "X-CSRF-TOKEN": csrfToken, // Include the CSRF token in the headers
-                },
-                success: function (response) {
-                    console.log(response);
-                    if (response.success) {
-                        console.log(response.success);
-                        // Form submission was successful, do something
-                        alert("Form submitted successfully");
-                    } else if (response.errors) {
-                        console.log(response.errors);
-                        // Display validation errors dynamically
-                        $.each(response.errors, function (field, errorMessage) {
-                            var errorField = $("#" + field + "-error");
-                            errorField.text(errorMessage);
-                        });
-                    }
-                },
-                error: function () {
-                    // Handle any AJAX errors
-                    alert("An error occurred while submitting the form.");
-                },
-            });
+        submitFormWithAjax("#basic_info", function (response) {
+            alert(response);
         });
-        $("#acc_info").on("submit", function (e) {
-            e.preventDefault(); // Prevent the default form submission
 
-            // Get the CSRF token from the meta tag
-            var csrfToken = $('meta[name="csrf-token"]').attr("content");
-            console.log(csrfToken);
-            console.log($(this).serialize());
-
-            $.ajax({
-                type: "POST",
-                url: $(this).attr("action"),
-                data: $(this).serialize(), // Serialize form data
-                headers: {
-                    "X-CSRF-TOKEN": csrfToken, // Include the CSRF token in the headers
-                },
-                success: function (response) {
-                    console.log(response);
-                    if (response.success) {
-                        console.log(response.success);
-                        // Form submission was successful, do something
-                        alert("Form submitted successfully");
-                    } else if (response.errors) {
-                        console.log(response.errors);
-                        // Display validation errors dynamically
-                        $.each(response.errors, function (field, errorMessage) {
-                            var errorField = $("#" + field + "-error");
-                            errorField.text(errorMessage);
-                        });
-                    }
-                },
-                error: function () {
-                    // Handle any AJAX errors
-                    alert("An error occurred while submitting the form.");
-                },
-            });
+        submitFormWithAjax("#acc_info", function (response) {
+            alert(response);
         });
     },
     Tasks: function () {
         $(".dd").nestable({
-            maxDepth: 3, // Set the maximum nesting level
+            maxDepth: 3,
             callback: function (l, e) {
-                // Your callback function when an item is moved
-                alert(l + "------" + e);
+                // Extract the task ID, new status, and old status from the item data
+                const taskId = l.attr("data-id");
+                const newStatus = l.parents("li.dd-item").attr("data-status");
+                const oldStatus = l.attr("data-status");
+                const route = l.attr("data-route");
+
+                // Send an AJAX request to update the task's status
+                $.ajax({
+                    url: route, // Replace with your Laravel route
+                    method: "POST",
+                    data: {
+                        taskId: taskId,
+                        newStatus: newStatus,
+                        oldStatus: oldStatus,
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Update was successful
+                            alert(response);
+                        } else {
+                            // Handle errors
+                        }
+                    },
+                    error: function (error) {
+                        // Handle AJAX errors
+                    },
+                });
             },
         });
-        $("#tasks").on("submit", function (e) {
-            e.preventDefault(); // Prevent the default form submission
-
-            // Get the CSRF token from the meta tag
-            var csrfToken = $('meta[name="csrf-token"]').attr("content");
-            console.log(csrfToken);
-            console.log($(this).serialize());
-
-            $.ajax({
-                type: "POST",
-                url: $(this).attr("action"),
-                data: $(this).serialize(), // Serialize form data
-                headers: {
-                    "X-CSRF-TOKEN": csrfToken, // Include the CSRF token in the headers
-                },
-                success: function (response) {
-                    console.log(response);
-                    if (response.success) {
-                        console.log(response.success);
-                        // Form submission was successful, do something
-                        alert("Form submitted successfully");
-                    } else if (response.errors) {
-                        console.log(response.errors);
-                        // Display validation errors dynamically
-                        $.each(response.errors, function (field, errorMessage) {
-                            var errorField = $("#" + field + "-error");
-                            errorField.text(errorMessage);
-                        });
-                    }
-                },
-                error: function () {
-                    // Handle any AJAX errors
-                    alert("An error occurred while submitting the form.");
-                },
-            });
+        submitFormWithAjax("#tasks", function (response) {
+            alert(response);
         });
     },
     ClientProfile: function () {
@@ -399,61 +330,101 @@ const pageCode = {
             alert(response);
         });
         // Fetch your finance data or use the variable passed from the Blade template
-        const url = $("#financeChart").data("url");
-        fetchData(url, (data) => {
-            // Process the data or perform actions with it
-            const accounts = Object.keys(data);
+        const financeChart = $("#financeChart");
+        const url = financeChart.data("url");
+        $("#accountFilter, #monthFilter").on("change", function () {
+            // Fetch the selected filter values
+            const selectedAccount = $("#accountFilter").val();
+            const selectedMonth = $("#monthFilter").val();
 
-            const seriesData = accounts.map((account) => {
-                const transactions = data[account];
+            // Construct the URL with filter parameters
+            const url =
+                financeChart.data("url") +
+                `?account=${selectedAccount}&month=${selectedMonth}`;
 
-                return {
-                    name: account,
-                    data: transactions.map((transaction) => {
-                        return {
-                            x: new Date(transaction.date).getTime(),
-                            y: transaction.amount,
-                            type: transaction.type,
-                            method: transaction.method,
-                        };
-                    }),
-                };
+            fetchData(url, (data) => {
+                // Process and update the chart with filtered data
+                createChart(data);
             });
+        });
+        fetchData(url, (data) => {
+            createChart(data);
+        });
+        function createChart(data) {
+            // Process the data or perform actions with it
+            const transactionsData = Object.keys(data).map((account) => {
+                $("h6 span.account-name").text(account);
+                return data[account];
+            });
+
+            const transactions = transactionsData[0];
+            const incomeData = transactions
+                .filter((transaction) => transaction.type === "income")
+                .map((transaction) => {
+                    return {
+                        x: new Date(transaction.date).getTime(),
+                        y: transaction.amount,
+                        type: transaction.type,
+                        method: transaction.method,
+                    };
+                });
+            const expenditureData = transactions
+                .filter((transaction) => transaction.type === "expenditure")
+                .map((transaction) => {
+                    return {
+                        x: new Date(transaction.date).getTime(),
+                        y: transaction.amount,
+                        type: transaction.type,
+                        method: transaction.method,
+                    };
+                });
 
             // Create the ApexCharts line graph with the formatted data
             const options = {
-                series: seriesData,
+                series: [
+                    {
+                        name: "Income",
+                        data: incomeData,
+                    },
+                    {
+                        name: "Expenditure",
+                        data: expenditureData,
+                    },
+                ],
                 chart: {
                     height: 350,
-                    type: 'line',
+                    type: "area",
                 },
                 dataLabels: {
                     enabled: false,
                 },
                 stroke: {
-                    curve: 'smooth',
+                    curve: "smooth",
                 },
                 xaxis: {
-                    type: 'datetime',
+                    type: "datetime",
                 },
                 tooltip: {
                     x: {
-                        format: 'dd MMM yyyy',
+                        format: "dd MMM yyyy",
                     },
                     y: {
                         title: {
                             formatter: (value) => {
-                                return "Phase Completion: " + value + "%";
+                                return "Account name: " + value + "";
                             },
                         },
                     },
                 },
             };
-        
+
             // Create the ApexCharts instance
-            const chart = new ApexCharts(document.querySelector("#financeChart"), options);
+            const chart = new ApexCharts(
+                document.querySelector("#financeChart"),
+                options
+            );
             chart.render();
-        });
+        }
     },
     Inbox: function () {
         var url = "/records";
@@ -530,7 +501,7 @@ $(document).ready(function () {
     $(".dropify").dropify();
     // Sumernote text input
     $("#summernote").summernote({
-        placeholder: "Please paste some texts here",
+        placeholder: "Please paste your description here",
         tabsize: 2,
         height: 120,
     });
@@ -540,7 +511,7 @@ $(document).ready(function () {
         pageCode[pageTitle]();
     } else {
         // Common code for other pages
-        alert(pageTitle);
+        console.log(pageTitle);
     }
     console.log(pageTitle);
 

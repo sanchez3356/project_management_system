@@ -69,6 +69,32 @@ if (!function_exists('profile_progress')) {
     }
 }
 
+if (!function_exists('calculateProjectsCompletionPercentage')) {
+    function calculateProjectsCompletionPercentage($projects)
+{
+
+    $totalProjects = $projects->count();
+    $completedProjects = 0;
+
+    foreach ($projects as $project) {
+        // You need to determine a condition that indicates whether the project is completed
+        // Let's assume that the 'status' property indicates the project's completion status
+        if ($project->status === 'completed') {
+            $completedProjects++;
+        }
+    }
+
+    if ($totalProjects > 0) {
+        $completionPercentage = ($completedProjects / $totalProjects) * 100;
+    } else {
+        $completionPercentage = 0; // To avoid division by zero if there are no projects
+    }
+
+    return $completionPercentage;
+}
+
+
+}
 if (!function_exists('project_progress')) {
     function project_progress($project)
     {

@@ -8,10 +8,38 @@
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5>{{$user->username }}'s Finances</h5>
+                <h6 class="fw-bold">Account name : <span class="fw-normal account-name">Finances</span></h6>
+                <div class="d-flex justify-contents-around align-items-center gap-2">
+                    <label for="accountFilter">Account:</label>
+                    <select class="form-control form-control-sm" id="accountFilter">
+                        @foreach($accounts as $account)
+                        <option value="{{ $account->id }}">{{ $account->account_name }}</option>
+                        @endforeach
+                        <!-- Add options for all available accounts -->
+                    </select>
+                    <!-- Filter by Transaction Month -->
+                    <label for="monthFilter">Month:</label>
+                    <select class="form-control form-control-sm" id="monthFilter">
+                        <option value="0">None</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="10">December</option>
+                        <!-- Add options for all available months -->
+                    </select>
+                </div>
                 <div class="dropdown">
-                    <button type="button" class="task-add btn btn-primary dropdown-toggle" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-plus me-2"></i>Add</button>
+                    <button type="button" class="task-add btn btn-sm btn-primary dropdown-toggle"
+                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i
+                            class="fas fa-plus me-2"></i>Add</button>
                     <ul class="dropdown-menu dropdown-menu-end dropstart dropdown-menu-dark"
                         aria-labelledby="dropdownMenuButton1">
                         <li>

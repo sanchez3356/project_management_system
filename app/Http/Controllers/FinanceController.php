@@ -81,7 +81,7 @@ class FinanceController extends Controller
             'date' => 'required|date',
             'method' => 'required|string',
             'type' => 'required|string',
-            'description' => 'required|string',
+            'desc' => 'required|string',
         ];
 
         // Create a validator instance with your data and rules
@@ -95,7 +95,7 @@ class FinanceController extends Controller
         $transaction = new transactions();
         $transaction->account_id = Auth::user()->id;
         $transaction->user_id = Auth::user()->id;
-        $transaction->description = $request->input('description');
+        $transaction->description = $request->input('desc');
         $transaction->transaction_date = $request->input('date');
         $transaction->payment_method = $request->input('method');
         $transaction->transaction_type = $request->input('type');
@@ -127,7 +127,40 @@ class FinanceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $transaction = transactions::find($id);
+        if ($transaction) {
+            $rules = [
+                'amount' => 'required|numeric|max:1000000',
+                'date' => 'required|date',
+                'method' => 'required|string',
+                'type' => 'required|string',
+                'description' => 'required|string',
+            ];
+
+            // Create a validator instance with your data and rules
+            $validator = Validator::make($request->all(), $rules);
+
+            // Check if the validation fails
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()]);
+            }
+
+            $transaction->update([
+                'account_id' => $request['project_title'],
+                'user_id' => Auth::user()->id,
+                'description' => $request['description'],
+                'transaction_date' => $request['date'],
+                'payment_method' => $request['method'],
+                'transaction_type' => $request['type'],
+                'amount' => $request['amount'],
+                // Update other attributes as needed
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Transaction record added succesfully']);
+        } else {
+            // Handle the case where no transaction is found with the given ID
+            return  response()->json(['success' => false, 'message' => 'Transaction record not found']);
+        }
     }
 
     /**
@@ -135,6 +168,20 @@ class FinanceController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $transaction = transactions::find($id);
+
+        if (!$transaction) {
+            // Phase not found
+            return response()->json(['message' => 'Transaction record not found'], 404);
+        }
+
+        // Attempt to delete the Phase
+        try {
+            $transaction->delete();
+            return response()->json(['message' => 'Transaction record deleted successfully'], 200);
+        } catch (\Exception $e) {
+            // Handle any potential errors
+            return response()->json(['message' => 'Error deleting the transaction record'], 500);
+        }
     }
 }

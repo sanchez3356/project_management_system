@@ -99,7 +99,7 @@ class ProjectsController extends Controller
             $imagePath = $request->file('project_image')->store('public/projects');
             $imagePath = str_replace('public/', '', $imagePath);
         } else {
-            $imagePath = "projects/DjlOeD2B30G2E7zcHmNrKRuAJCMVe9N7EZunLlQy.jpg";
+            $imagePath = "images/no-image.png";
         }
         $project = projects::create([
             'project_title' => $request['project_title'],
@@ -171,8 +171,8 @@ class ProjectsController extends Controller
         // Use the $id variable to retrieve the project with the specific ID
         $project = Projects::with('phases.tasks')->find($id);
         $projectCount = Projects::count(); // Assuming "Project" is your Eloquent model
-        $projectTypes = project_types::all(); // Assuming "ProjectType" is your Eloquent model
-        $clients = clients::all(); // Assuming "clients" is your Eloquent model
+        $projectTypes = project_types::get(); // Assuming "ProjectType" is your Eloquent model
+        $clients = clients::get(); // Assuming "clients" is your Eloquent model
         if ($project) {
             // Get the client whose ID matches the 'client' column in the project row
             $client = clients::find($project->client);
@@ -183,7 +183,7 @@ class ProjectsController extends Controller
 
         } else {
             // Handle the case where no project is found with the given ID
-            return view('pages.projects-details');
+            return redirect()->back()->with('error', 'Project not found!');
         }
     }
 
@@ -203,7 +203,7 @@ class ProjectsController extends Controller
                 'project_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 // 'project_image' => 'image|max:2048',
                 'project_description' => 'required',
-                'project_type' => 'required|numeric|exists:project_type,id',
+                'project_type' => 'required|numeric|exists:project_types,id',
                 'priority' => 'required',
                 'rate' => 'numeric',
             ];
@@ -221,12 +221,12 @@ class ProjectsController extends Controller
             if ($request->hasFile('project_image')) {
                 $imagePath = $request->file('project_image')->store('public/projects');
             } else {
-                $imagePath = "projects/DjlOeD2B30G2E7zcHmNrKRuAJCMVe9N7EZunLlQy.jpg";
+                $imagePath = "images/no-image.png";
             }
 
             $project->update([
                 'project_title' => $request['project_title'],
-                'project_type' => $request['email'],
+                'project_type' => $request['project_type'],
                 'created_by' => Auth::user()->id,
                 'client' => $request['client'],
                 'start_date' => $request['start_date'],
@@ -242,7 +242,7 @@ class ProjectsController extends Controller
 
         } else {
             // Handle the case where no project is found with the given ID
-            return redirect()->route('projects.create')->with('error', 'Project not found!');
+            return redirect()->back()->with('error', 'Project not found!');
         }
     }
 

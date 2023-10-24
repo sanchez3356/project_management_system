@@ -45,15 +45,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/projects-grid', [ProjectsController::class, 'grid'])->name('projects.grid');
     Route::resource('clients', ClientsController::class);
     Route::get('clients/{client}/edit', [ClientsController::class, 'edit'])->name('clients.edit');
-    Route::resource('profiles', ProfileController::class);
+    Route::resource('profiles', ProfileController::class)->only(['index', 'update']);
     Route::resource('Inboxes', InboxController::class)->only(['index', 'store', 'destroy']);
-    Route::resource('tasks', TasksController::class)->only(['index', 'destroy']);
+    Route::resource('tasks', TasksController::class)->only(['index', 'destroy', 'store', 'update']);
     Route::resource('phases', PhaseController::class)->only(['store', 'destroy', 'update']);
     Route::resource('finances', FinanceController::class);
     Route::resource('accounts', AccountsController::class)->only(['edit', 'store', 'destroy']);
     Route::get('/records/project', [RecordsController::class, 'projects'])->name('records.project');
     Route::get('/records/finance', [RecordsController::class, 'transactions'])->name('records.finance');
-        Route::post('/tasks', [TasksController::class, 'store'])->name('tasks.store');
+    // Route::post('/tasks', [TasksController::class, 'store'])->name('tasks.store');
     // Route::get('/records', [RecordsController::class, 'getTasksData'])->name('records.tasks');
     // Route::resource('activities', ActivitiesController::class)->only(['index', 'store', 'destroy']);
 });

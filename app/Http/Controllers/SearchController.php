@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\profiles;
 use App\Models\projects;
+use App\Models\tasks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\accounts;
@@ -25,6 +26,9 @@ class SearchController extends Controller
         $profiles = profiles::where('first_name', 'like', "%$query%")
             ->orWhere('last_name', 'like', "%$query%")
             ->orWhere('bio', 'like', "%$query%")
+            ->get();
+        $tasks = tasks::where('task', 'like', "%$query%")
+            ->orWhere('description', 'like', "%$query%")
             ->get();
         // Repeat the same pattern for other tables and columns
         $results = [];
@@ -61,6 +65,14 @@ class SearchController extends Controller
                 'type' => 'Project',
                 'name' => $profile->first_name + ' ' + $profile->last_name,
                 'data' => $profile->bio,
+                // Add other fields as needed
+            ];
+        }
+        foreach ($tasks as $task) {
+            $results[] = [
+                'type' => 'Task',
+                'name' => $task->task,
+                'data' => $task->description,
                 // Add other fields as needed
             ];
         }

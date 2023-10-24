@@ -97,7 +97,7 @@ class ClientsController extends Controller
             $imagePath = $request->file('avatar')->store('public/avatars');
             $imagePath = str_replace('public/', '', $imagePath);
         } else {
-            $imagePath = "avatars/male.png'";
+            $imagePath = "avatars/male.png";
         }
 
         $client = clients::create([
@@ -179,15 +179,16 @@ class ClientsController extends Controller
         if ($client) {
             // Define your validation rules
             $rules = [
-                'first_name' => 'required|max:255|string',
-                'last_name' => 'required|max:255|string',
-                'email' => 'required|string|email|max:255',
-                'username' => 'required|max:100|string',
-                'password' => 'required|string|min:8',
+                'id' => 'numeric',
+                'first_name' => 'required|max:100|string',
+                'last_name' => 'required|max:100|string',
+                'email' => 'required|string|email|max:255|unique:clients',
+                'username' => 'required|max:35|string',
                 'phone' => 'nullable|max:100|string',
-                'client_id' => 'required|max:100|string',
+                // 'avatar' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'avatar' => 'required|max:2048',
                 'address' => 'required|max:100|string',
-            ];
+                ];
 
             // Create a validator instance with your data and rules
             $validator = Validator::make($request->all(), $rules);

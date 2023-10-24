@@ -66,7 +66,8 @@
             <hr class="dropdown-divider w-75 m-auto d-block" />
             <div class="d-flex align-items-center py-4 px-2 justify-content-center dropdown">
                 <div class="icon me-3">
-                    <img src="{{asset('storage/' . Auth::user()->avatar) ?: asset('storage/avatars/male.png') }}"
+                    <img width="70px" height="55px"
+                        src="{{asset('storage/' . Auth::user()->avatar) ?: asset('storage/avatars/male.png') }}"
                         class="rounded-circle img-fluid" alt="{{ Auth::user()->username }}'s user avatar" />
                 </div>
                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"

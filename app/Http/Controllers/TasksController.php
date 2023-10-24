@@ -51,13 +51,11 @@ class TasksController extends Controller
             'task' => 'required|max:255|string',
             'description' => 'required|max:255|string',
             'phase' => 'required|exists:phases,id',
-            // Check if the "phase" exists in the "phases" table
             'order' => 'string',
             'image' => 'string',
             'file' => 'file|mimes:pdf,doc,docx',
             'deadline' => 'nullable|max:100|date',
             'status' => 'required|max:255|string',
-            // "status" should be a string
         ];
 
         // Create a validator instance with your data and rules

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\profiles;
 use Illuminate\Http\Request;
 use App\Models\projects;
 use App\Models\clients;
@@ -30,7 +31,7 @@ class HomeController extends Controller
     {
         $projects = projects::with('clients','phases.tasks')->get(); // Assuming you have a "projects" model
         $projectCount = Projects::count(); // Assuming "Project" is your Eloquent model
-
+        $completed = calculateProjectsCompletionPercentage($projects);
         // Retrieve the project types from the database
         $projectTypes = project_types::get(); // Assuming "ProjectType" is your Eloquent model
 
@@ -45,6 +46,6 @@ class HomeController extends Controller
         $pageTitle = "Home";
 
         // You can pass both the project types and project count to the view
-        return view('pages.home', compact('projects', 'projectCount', 'clients', 'clientsCount', 'inbox', 'inboxCount', 'projectTypes', 'pageTitle'));
+        return view('pages.home', compact('projects', 'projectCount', 'clients', 'clientsCount', 'inbox', 'inboxCount', 'projectTypes', 'pageTitle', 'completed'));
     }
 }

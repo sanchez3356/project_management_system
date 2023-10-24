@@ -77,7 +77,25 @@ class AccountsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $rules = [
+            'account' => 'required|max:100',
+            'balance' => 'numeric',
+        ];
+
+        // Create a validator instance with your data and rules
+        $validator = Validator::make($request->all(), $rules);
+
+        // Check if the validation fails
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()]);
+        }
+        $account = accounts::find($id);
+        if ($account) {
+            $account->account_name = $request->input('account');
+            $account->final_balance = $request->input('balance');
+            $account->save();
+        }
+        return response()->json(['success' => true]);    
     }
 
     /**
@@ -85,6 +103,20 @@ class AccountsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $account = accounts::find($id);
+
+        if (!$account) {
+            // Project not found
+            return response()->json(['message' => 'Account not found'], 404);
+        }
+
+        // Attempt to delete the project
+        try {
+            $account->delete();
+            return response()->json(['message' => 'Account deleted successfully'], 200);
+        } catch (\Exception $e) {
+            // Handle any potential errors
+            return response()->json(['message' => 'Error deleting the account'], 500);
+        }
     }
 }

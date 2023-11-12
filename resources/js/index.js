@@ -205,9 +205,32 @@ const pageCode = {
         // chart.render();
         // Sales income line chart
     },
+    Users: function () {
+        // Formatting function for row details - modify as you need
+        function format(d) {
+            return "<div>-- Action " + d[6] + "</div>";
+        }
+
+        // Initialize the DataTable
+        var table = $("#user_list").DataTable();
+
+        // Handle click events to toggle child rows
+        // Add event listener for opening and closing details
+        table.on("click", "td.dt-control", function (e) {
+            let tr = e.target.closest("tr");
+            let row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+            } else {
+                // Open this row
+                row.child(format(row.data())).show();
+            }
+        });
+    },
     Projects: function () {
         function format(d) {
-            console.log(d);
             return "<div>-- Action " + d[6] + "</div>";
         }
         // Initialize the DataTable
@@ -233,48 +256,63 @@ const pageCode = {
         $("#countrySelect").select2();
 
         submitFormWithAjax("#basic_info", function (response) {
-            alert(response);
+            alert(response.message);
         });
 
         submitFormWithAjax("#acc_info", function (response) {
-            alert(response);
+            alert(response.message);
+        });
+        $("#userAvatar").on("change", function () {
+            // Get the selected file
+            var file = $(this)[0].files[0];
+            var url = $(this).data("url");
+            if (file) {
+                // You can display a preview of the selected image if needed
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    // Set the src attribute for all img elements with the class 'profilePreview'
+                    $("img.profilePreview").attr("src", e.target.result);
+                };
+                reader.readAsDataURL(file);
+
+                // Here, you can send the file to the server using AJAX to update the avatar
+                // Make an AJAX request with the "PUT" method
+                var formData = new FormData();
+                formData.append("_method", "PUT"); // Add the "_method" field with the value "PUT"
+                formData.append("userAvatar", file);
+
+                console.log(formData);
+
+                postData(url, formData, function (data) {
+                    console.log(data);
+                });
+            }
         });
     },
     Tasks: function () {
         $(".dd").nestable({
             maxDepth: 3,
             callback: function (l, e) {
+                console.log(l);
+                console.log(e);
                 // Extract the task ID, new status, and old status from the item data
                 const taskId = l.attr("data-id");
                 const newStatus = l.parents("li.dd-item").attr("data-status");
                 const oldStatus = l.attr("data-status");
                 const route = l.attr("data-route");
-
-                // Send an AJAX request to update the task's status
-                $.ajax({
-                    url: route, // Replace with your Laravel route
-                    method: "POST",
-                    data: {
-                        taskId: taskId,
-                        newStatus: newStatus,
-                        oldStatus: oldStatus,
-                    },
-                    success: function (response) {
-                        if (response.success) {
-                            // Update was successful
-                            alert(response);
-                        } else {
-                            // Handle errors
-                        }
-                    },
-                    error: function (error) {
-                        // Handle AJAX errors
-                    },
+                // Make an AJAX request with the "PUT" method
+                var formData = new FormData();
+                formData.append("_method", "PUT"); // Add the "_method" field with the value "PUT"
+                formData.append("taskId", taskId);
+                formData.append("newStatus", newStatus);
+                formData.append("oldStatus", oldStatus);
+                postData(route, formData, function (data) {
+                    alert(data);
                 });
             },
         });
         submitFormWithAjax("#tasks", function (response) {
-            alert(response);
+            alert(response.message);
         });
     },
     ClientProfile: function () {
@@ -323,11 +361,12 @@ const pageCode = {
                 row.child(format(row.data())).show();
             }
         });
+
         submitFormWithAjax("#account_form", function (response) {
-            alert(response);
+            alert(response.message);
         });
         submitFormWithAjax("#transaction_form", function (response) {
-            alert(response);
+            alert(response.message);
         });
         // Fetch your finance data or use the variable passed from the Blade template
         const financeChart = $("#financeChart");
@@ -356,8 +395,15 @@ const pageCode = {
                 $("h6 span.account-name").text(account);
                 return data[account];
             });
-
             const transactions = transactionsData[0];
+            // Check if there are no transactions
+            if (Object.keys(transactions).length === 0) {
+                showAlert("error", "No transactions to display.");
+                return;
+            } else {
+                showAlert("success", "Displaying available transactions");
+            }
+
             const incomeData = transactions
                 .filter((transaction) => transaction.type === "income")
                 .map((transaction) => {
@@ -411,7 +457,7 @@ const pageCode = {
                     y: {
                         title: {
                             formatter: (value) => {
-                                return "Account name: " + value + "";
+                                return "Transaction type: " + value + "";
                             },
                         },
                     },
@@ -470,9 +516,73 @@ const pageCode = {
         });
     },
     ProjectsDetails: function () {
+        // Function to update delete button state based on checkbox status
+        function updateDeleteButtonState() {
+            const $deleteButton = $(".task-delete");
+            const $checkboxes = $(".task-checkbox");
+            const checkedCheckboxes = $checkboxes.filter(":checked");
+
+            if (checkedCheckboxes.length > 0) {
+                $deleteButton.removeAttr("disabled");
+            } else {
+                $deleteButton.attr("disabled", "disabled");
+            }
+        }
+
+        // Handle checkbox changes
+        $(".task-checkbox").on("change", function () {
+            updateDeleteButtonState();
+        });
+
+        // Handle task show/edit clicks (Replace this with your AJAX logic)
+        $(".task-show").on("click", function () {
+            const route = $(this).data("route");
+            // Send an AJAX request to edit the task with the taskId
+            alert(route);
+            fetchData(route, (data) => {
+                console.log(data);
+            });
+            // Implement your AJAX logic here
+        });
+
+        $(".task-edit").on("click", function () {
+            const route = $(this).data("route");
+            // Send an AJAX request to edit the task with the taskId
+            alert(route);
+            fetchData(route, (data) => {
+                console.log(data);
+                var taskModal = $("#taskModal");
+                taskModal.find("#taskModalLabel").text("Update task details");
+                taskModal.find('input[name="phase"]').val(data.phases_id);
+                taskModal.find('input[name="task"]').val(data.task);
+                taskModal
+                    .find('textarea[name="description"]')
+                    .text(data.description);
+                taskModal.find('input[name="deadline"]').val(data.deadline);
+                taskModal
+                    .find(
+                        'select[name="status"] option[value="' +
+                            data.status +
+                            '"]'
+                    )
+                    .attr("selected", "selected");
+                // Update the form action URL
+                var actionUrl = taskModal.data("route") + "/" + data.id;
+                taskModal.find("form").attr("action", actionUrl);
+                // Add the hidden method field
+                taskModal
+                    .find("form")
+                    .append('<input type="hidden" name="_method" value="PUT">');
+                taskModal.find('button[type="submit"]').text("Update");
+
+                taskModal.modal("show");
+            });
+            // Implement your AJAX logic here
+        });
+
         var phase;
         $(".task-add").click(function () {
-            var phase = $(this).data("id");
+            phase = $(this).data("id");
             $("#task_form input[name='phase']").val(phase); // Set the value of the hidden input
             $("#taskModal").modal("show");
         });
@@ -514,14 +624,19 @@ $(document).ready(function () {
         console.log(pageTitle);
     }
     console.log(pageTitle);
-
     var routeToDelete;
-    var itemIdToDelete;
 
     // Show delete confirmation modal when a delete button is clicked
     $(".delete-item").click(function () {
         routeToDelete = $(this).data("route");
-        itemIdToDelete = $(this).data("id");
+        $("#deleteConfirmationModal").modal("show");
+    });
+    $("#transactions_list").on("click", "td button.delete-item", function (e) {
+        routeToDelete = $(this).data("route");
+        $("#deleteConfirmationModal").modal("show");
+    });
+    $("#pro_list").on("click", "td button.delete-item", function (e) {
+        routeToDelete = $(this).data("route");
         $("#deleteConfirmationModal").modal("show");
     });
 
@@ -564,6 +679,36 @@ function updateProgressBars() {
     });
 }
 
+function postData(url, data, callback) {
+    // Get the CSRF token from the meta tag
+    var csrfToken = $('meta[name="csrf-token"]').attr("content");
+    $.ajax({
+        url: url, // Replace with your actual URL for updating the avatar
+        method: "POST", // Use "POST" method
+        data: data,
+        contentType: false,
+        processData: false,
+        headers: {
+            "X-CSRF-TOKEN": csrfToken, // Include the CSRF token in the headers
+        },
+        success: function (response) {
+            // Handle the success response
+            console.log(response);
+            if (response.success) {
+                callback(response);
+                showAlert("success", response.message);
+            } else {
+                showAlert("error", response.message);
+            }
+        },
+        error: function (error) {
+            // Handle the error
+            console.log(error);
+            showAlert("error", "Error submitting data:", error);
+        },
+    });
+}
+
 function fetchData(url, callback) {
     fetch(url)
         .then((response) => {
@@ -579,7 +724,7 @@ function fetchData(url, callback) {
         })
         .catch((error) => {
             console.error("Error fetching data:", error);
-            showAlert("error", error);
+            showAlert("error", "Error fetching data:", error);
         });
 }
 
@@ -614,6 +759,8 @@ function submitFormWithAjax(formSelector, callback) {
                         errorField.text(errorMessage);
                     });
                     showAlert("error", "Please fix the errors in the form.");
+                } else {
+                    showAlert("error", response.message);
                 }
             },
             error: function () {

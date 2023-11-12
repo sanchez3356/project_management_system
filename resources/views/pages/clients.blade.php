@@ -2,7 +2,6 @@
 
 
 @section('content')
-
 <!-- Clients list section start  -->
 <div class="row g-2 clearfix"> @if(session('success')) <div class="alert alert-success alert-dismissible fade show">
         {{ session('success') }}
@@ -16,8 +15,9 @@
     <div class="col-lg-3 col-md-6 col-sm-12">
         <div class="card">
             <div class="card-body text-center">
-                <img src="{{asset('storage/' . $client->avatar) ?: asset('storage/avatars/female.png') }}"
-                    alt="{{ $client->username }}'s avatar" class="rounded-circle mb-3" />
+                <img width="100px" height="105px"
+                    src="{{asset('storage/' . $client->avatar) ?: asset('storage/avatars/female.png') }}"
+                    alt="{{ $client->username }}'s avatar" class="rounded-circle mb-3 thumbnail mx-auto d-block" />
                 <h5>{{ $client->username }}</h5>
                 <small>{{ $client->client_title}}</small>
                 <h6>{{ $client->client_id}} </h6>

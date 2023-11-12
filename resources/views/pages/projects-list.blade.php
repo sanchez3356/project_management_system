@@ -47,9 +47,12 @@
                                 <small>Completion with: {{ $progress }}%</small>
                             </td>
                             <td>
-                                <img class="avatar rounded" src="./avatar2.jpg" data-bs-toggle="tooltip"
-                                    data-bs-placement="left" alt="Avatar" aria-label="Team Lead"
-                                    data-bs-original-title="Team Lead" />
+                                <img width="45px" height="45px" class="avatar rounded"
+                                    src="{{ asset('storage/' . $project->clients->avatar) ?: asset('storage/avatars/male.png')}}"
+                                    data-bs-toggle="tooltip" data-bs-placement="left"
+                                    alt="{{$project->clients->username}}'s Avatar"
+                                    aria-label="{{$project->clients->username}}"
+                                    data-bs-original-title=" {{$project->clients->username}}" />
                             </td>
                             <td>{{ $project->rate }} </td>
                             <td><span class="badge bg-success">{{ $project->priority }}</span></td>

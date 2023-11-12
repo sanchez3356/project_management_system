@@ -11,7 +11,8 @@
                 <h6 class="card-title mb-4">
                     {{ $project->project_title }}
                 </h6>
-                <p>{{ Illuminate\Support\Str::limit($project->project_description, 300) }}</p>
+                <div class="w-100 overflow-hidden pb-2" style="max-height:200px">{!! $project->project_description !!}
+                </div>
                 <div class="progress-container progress-info">
                     <span class="progress-badge">Project Status</span>
                     <div class="progress">
@@ -108,8 +109,9 @@
             <div class="card-body text-center">
                 @if(isset($client) && !empty($client))
                 <div class="profile-image mb-3">
-                    <img src="{{asset('storage/' . $client->avatar) ?: asset('storage/avatars/female.png') }}"
-                        class="rounded-circle" alt="{{ $client->username }}'s avatar image" />
+                    <img width="100px" height="105px"
+                        src="{{asset('storage/' . $client->avatar) ?: asset('storage/avatars/female.png') }}"
+                        alt="{{ $client->username }}'s avatar" class="rounded-circle mb-3 thumbnail mx-auto d-block" />
                 </div>
                 <div>
                     <h4><strong>{{ $client->username }}</strong></h4>
@@ -143,13 +145,20 @@
                             </span><span class="date badge bg-warning ms-2">{{ $phase->status }}</span></a>
                         <ul class="list-unstyled mm-collapse">
                             @foreach ($phase->tasks as $task)
-                            <li data-task-id="{{ $task->id }}">
+                            <li data-task-id="{{ $task->id }}" class="d-flex align-items-center justify-content-around">
                                 {{ $task->task }}
                                 <span class="date badge">{{ when($task->deadline) }}</span>
                                 (Order: {{ $task->order }})
                                 (Deadline: {{ formatMyDate($task->deadline) }})
-                                <span class="float-end"><input class="form-check-input me-2" type="checkbox"
-                                        id="{{ $task->id }}"></span>
+                                <span class="task-show ms-3 text-success"
+                                    data-route="{{ route('tasks.show', $task->id) }}"><i class="fas fa-eye"></i>
+                                </span>
+                                <span class="task-edit mx-3 text-secondary"
+                                    data-route="{{ route('tasks.edit', $task->id) }}"><i
+                                        class="fas fa-pen-to-square"></i>
+                                </span>
+                                <span class="position-relative"><input class="form-check-input me-2 task-checkbox"
+                                        type="checkbox" id="{{ $task->id }}"></span>
                             </li>
                             @endforeach
                             <button type="button" data-id="{{ $phase->id }}"
@@ -199,67 +208,7 @@
                 <div class="text-center mx-3">No Phases available for this project</div>
                 @endif
             </div>
-            <!-- <div class="card-body">
-                            @if(isset($project->phases) && !empty($project->phases))
-                            @foreach($project->phases as $phase)
-                            <div class="timeline-item green {{ $phase->status }}">
-                                <span class="date">{{ formatMyDate($phase->start_date) }}</span>
-                                <h6>{{ $phase->phase }}</h6>
-                                <span>{{ $phase->status }}</span>
-                                <ul id="phase-{{ $phase->id }}" class="{{ $phase->phase }}">
-                                    <li class="text-bold text-uppercase">{{ $phase->phase }} Tasks</li>
-                                    <hr>
-                                    @foreach ($phase->tasks as $task)
-                                    <li data-task-id="{{ $task->id }}">
-                                        {{ $task->task }}
-                                        <span class="date badge">{{ when($task->deadline) }}</span>
-                                        (Order: {{ $task->order }})
-                                        (Deadline: {{ $task->deadline }})
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            @endforeach
-                            @else
-                            <div class="text-center">No Phases available for this project</div>
-                            @endif
-
-                                            <div id="accordion accordion-flush d-none">
-                    @foreach($project->phases as $phase)
-                    <div class="accordion-item ">
-                        <h2 class="accordion-header" id="heading-{{ $phase->id }}">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse-{{ $phase->id }}" aria-expanded="true"
-                                aria-controls="collapse-{{ $phase->id }}">
-                                <span class="date">{{ formatMyDate($phase->start_date) }}</span>
-                                {{ $phase->phase }}
-                                <span>{{ $phase->status }}</span>
-                            </button>
-                        </h2>
-                        <div id="collapse-{{ $phase->id }}" class="accordion-collapse collapse"
-                            aria-labelledby="heading-{{ $phase->id }}">
-                            <div class="accordion-body">
-                                <ul id="phase-{{ $phase->id }}" class="{{ $phase->phase }}">
-                                    <li class="text-bold text-uppercase">{{ $phase->phase }} Tasks</li>
-                                    <hr>
-                                    @foreach ($phase->tasks as $task)
-                                    <li data-task-id="{{ $task->id }}">
-                                        {{ $task->task }}
-                                        <span class="date badge">{{ when($task->deadline) }}</span>
-                                        (Order: {{ $task->order }})
-                                        (Deadline: {{ $task->deadline }})
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-
-                        </div> -->
         </div>
-
         <div class="tab-content p-0 mt-2 d-none" id="myTabContent">
             <div class="tab-pane fade" id="Activities" role="tabpanel" aria-labelledby="Activities-tab">
 
@@ -307,7 +256,7 @@
         </div>
     </div>
 </div>
-</div>
+
 <!-- Projects details section end  -->
 
 @endsection

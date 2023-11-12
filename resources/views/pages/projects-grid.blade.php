@@ -19,9 +19,8 @@
                 <h6 class="project-title text-primary mb-3">
                     <a href="{{ route('projects.show', $project->id) }}">{{ $project->project_title }}</a>
                 </h6>
-                <p>
-                    {{ Illuminate\Support\Str::limit($project->project_description, 100) }}
-                </p>
+                <div class="w-100 overflow-hidden pb-2" style="max-height:100px">{!! $project->project_description !!}
+                </div>
                 <div class="progress mb-3" style="height: 6px">
                     <div class="progress-bar" role="progressbar" style="width: {{ $progress }}%"
                         aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -30,24 +29,20 @@
                     <h6 class="mb-0 me-2">Team:</h6>
                     <ul class="list-unstyled team-info mb-0 d-flex">
                         <li>
-                            <img src="../dist/assets/images/xs/avatar4.jpg" data-bs-toggle="tooltip"
-                                data-bs-placement="top" alt="Avatar" aria-label="Chris Fox"
-                                data-bs-original-title="Chris Fox" />
+                            <img src="#" data-bs-toggle="tooltip" data-bs-placement="top" alt="Avatar"
+                                aria-label="Chris Fox" data-bs-original-title="Chris Fox" />
                         </li>
                         <li>
-                            <img src="../dist/assets/images/xs/avatar5.jpg" data-bs-toggle="tooltip"
-                                data-bs-placement="top" alt="Avatar" aria-label="Joge Lucky"
-                                data-bs-original-title="Joge Lucky" />
+                            <img src="#" data-bs-toggle="tooltip" data-bs-placement="top" alt="Avatar"
+                                aria-label="Joge Lucky" data-bs-original-title="Joge Lucky" />
                         </li>
                         <li>
-                            <img src="../dist/assets/images/xs/avatar2.jpg" data-bs-toggle="tooltip"
-                                data-bs-placement="top" alt="Avatar" aria-label="Folisise Chosielie"
-                                data-bs-original-title="Folisise Chosielie" />
+                            <img src="#" data-bs-toggle="tooltip" data-bs-placement="top" alt="Avatar"
+                                aria-label="Folisise Chosielie" data-bs-original-title="Folisise Chosielie" />
                         </li>
                         <li>
-                            <img src="../dist/assets/images/xs/avatar1.jpg" data-bs-toggle="tooltip"
-                                data-bs-placement="top" alt="Avatar" aria-label="Joge Lucky"
-                                data-bs-original-title="Joge Lucky" />
+                            <img src="#" data-bs-toggle="tooltip" data-bs-placement="top" alt="Avatar"
+                                aria-label="Joge Lucky" data-bs-original-title="Joge Lucky" />
                         </li>
                     </ul>
                 </div>

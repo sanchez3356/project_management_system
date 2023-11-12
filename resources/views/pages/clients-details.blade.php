@@ -10,18 +10,22 @@
             <div class="card-body">
                 <div class="d-flex">
                     <div class="profile-image">
-                        <img src="{{asset('storage/' . $client->avatar) ?: asset('storage/avatars/male.png') }}"
+                        <img width="200px" height="auto"
+                            src="{{asset('storage/' . $client->avatar) ?: asset('storage/avatars/male.png') }}"
                             alt="{{ $client->username }}'s avatar image">
                     </div>
                     <div class="details ms-3">
-                        <h4 class="h5 text-primary"><strong>@empty($profile->first_name) John @else
-                                {{ $profile->first_name }}@endempty</strong>
-                            @empty($profile->last_name) Doe @else {{ $profile->last_name }} @endempty <span
-                                class="h6 text-secondary">@empty($client->client_title) No job title available @else
-                                {{ $client->client_title }} @endempty</span>
+                        <h4 class="h5 text-primary text-uppercase"><strong>@empty($user->profile->first_name) John @else
+                                {{ $user->profile->first_name }}@endempty</strong>
+                            @empty($user->profile->last_name) Doe @else {{ $user->profile->last_name }} @endempty <span
+                                class="h6 text-secondary">@empty($user->profile->cjob_title) No job title available
+                                @else
+                                {{ $user->profile->job_title }} @endempty</span>
                         </h4>
-                        <p>@empty($profile->address) No address provided @else {{ $profile->address }} @endempty</p>
-                        <p>{{profile_progress($client, $profile)}}</p>
+                        <p>@empty($user->profile->address) No address provided @else {{ $user->profile->address }}
+                            @endempty
+                        </p>
+                        <p>{{profile_progress($client)}}</p>
                         <p class="social-icon">
                             <a title="Twitter" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
                             <a title="Facebook" href="javascript:void(0);"><i class="fa fa-facebook"></i></a>
@@ -38,7 +42,7 @@
                         </div>
                     </div>
                     <div class="profile-progress ms-auto">
-                        <div id="profileCircle" data-progress="{{profile_progress($client, $profile)}}"></div>
+                        <div id="profileCircle" data-progress="{{profile_progress($client)}}"></div>
                     </div>
                 </div>
             </div>

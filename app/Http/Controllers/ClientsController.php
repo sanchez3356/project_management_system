@@ -31,13 +31,13 @@ class ClientsController extends Controller
     {
         // Retrieve the number of projects from your database
         $projectCount = Projects::count(); // Assuming "Project" is your Eloquent model
-        $project = Projects::all(); // Assuming "Project" is your Eloquent model
+        $project = Projects::get(); // Assuming "Project" is your Eloquent model
 
         // Retrieve the project types from the database
-        $projectTypes = project_types::all(); // Assuming "ProjectType" is your Eloquent model
+        $projectTypes = project_types::get(); // Assuming "ProjectType" is your Eloquent model
 
         // Retrieve the clients from the database
-        $clients = clients::all(); // Assuming "clients" is your Eloquent model
+        $clients = clients::with('profile')->get(); // Assuming "clients" is your Eloquent model
         $pageTitle = "Clients";
 
         // You can pass both the project types and project count to the view
@@ -51,13 +51,13 @@ class ClientsController extends Controller
     {
         // Retrieve the number of projects from your database
         $projectCount = Projects::count(); // Assuming "Project" is your Eloquent model
-        $projects = Projects::all(); // Assuming "Project" is your Eloquent model
+        $projects = Projects::get(); // Assuming "Project" is your Eloquent model
 
         // Retrieve the project types from the database
-        $projectTypes = project_types::all(); // Assuming "ProjectType" is your Eloquent model
+        $projectTypes = project_types::get(); // Assuming "ProjectType" is your Eloquent model
 
         // Retrieve the clients from the database
-        $clients = clients::all(); // Assuming "clients" is your Eloquent model
+        $clients = clients::with('profile')->get(); // Assuming "clients" is your Eloquent model
         $pageTitle = "ClientsAdd";
 
         // You can pass both the project types and project count to the view
@@ -75,11 +75,11 @@ class ClientsController extends Controller
             'first_name' => 'required|max:100|string',
             'last_name' => 'required|max:100|string',
             'email' => 'required|string|email|max:255|unique:clients',
-            'username' => 'required|max:35|string',
+            'username' => 'required|max:35|string|unique:clients',
             'password' => 'required|string|min:8|confirmed',
-            'phone' => 'nullable|max:100|string',
-            // 'avatar' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'avatar' => 'required|max:2048',
+            'phone' => 'nullable|max:100|string|unique:profiles',
+            'avatar' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'avatar' => 'required|max:2048',
             'address' => 'required|max:100|string',
         ];
 
@@ -108,15 +108,17 @@ class ClientsController extends Controller
             'created_by' => Auth::user()->id,
         ]);
 
-
+        if ($client) {
         $profile = profiles::create([
-            'email' => $client->email,
+            'profileable_type' => 'App\Models\clients',
+            'profileable_id' => $client->id,
+            'email' => $request['email'],
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'phone' => $request['phone'],
             'address' => $request['address'],
         ]);
-
+    }
         // Redirect back or to a success page
         return redirect()->route('clients.create')->with('success', 'Client added successfully');
     }
@@ -126,16 +128,15 @@ class ClientsController extends Controller
      */
     public function show(string $id)
     {
-        $client = clients::find($id);
+        $client = clients::with('profile')->find($id);
         if ($client) {
             // Get the project whose ID matches the 'client' column in the project row
             $project = projects::find($client->$id);
-            $profile = profiles::where('email', $client->email)->first();
 
             // Now you have the project, its tasks, and its client
-            $pageTitle = "Clients";
+            $pageTitle = "ClientProfile";
 
-            return view('pages.clients-details', compact('client', 'project', 'pageTitle', 'profile'));
+            return view('pages.clients-details', compact('client', 'project', 'pageTitle'));
 
         } else {
             $pageTitle = "ClientProfile";
@@ -182,11 +183,10 @@ class ClientsController extends Controller
                 'id' => 'numeric',
                 'first_name' => 'required|max:100|string',
                 'last_name' => 'required|max:100|string',
-                'email' => 'required|string|email|max:255|unique:clients',
+                'email' => 'required|string|email|max:255',
                 'username' => 'required|max:35|string',
                 'phone' => 'nullable|max:100|string',
-                // 'avatar' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-                'avatar' => 'required|max:2048',
+                'avatar' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'address' => 'required|max:100|string',
                 ];
 
@@ -200,13 +200,21 @@ class ClientsController extends Controller
                     ->withErrors($validator)
                     ->withInput();
             }
-
+            
+            if ($request->hasFile('avatar')) {
+                $imagePath = $request->file('avatar')->store('public/avatars');
+                $imagePath = str_replace('public/', '', $imagePath);
+            } else {
+                $imagePath = "avatars/male.png";
+            }
+    
             $client->update([
                 'username' => $request['username'],
                 'email' => $request['email'],
-                'client_title' => $request['client_title'],
+                'avatar' => $imagePath,
                 // Update other attributes as needed
             ]);
+            
             $profile->update([
                 'first_name' => $request['first_name'],
                 'last_name' => $request['last_name'],

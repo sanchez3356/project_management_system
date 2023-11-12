@@ -76,13 +76,13 @@ class ProjectsController extends Controller
         // Define your validation rules
         $rules = [
             'project_title' => 'required|max:255|unique:projects',
-            'client' => 'required',
+            'client' => 'required|numeric',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'project_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'project_description' => 'required',
-            'project_type' => 'required',
-            'priority' => 'required',
+            'project_description' => 'required|string',
+            'project_type' => 'required|numeric',
+            'priority' => 'required|string',
             'rate' => 'numeric',
         ];
         // Create a validator instance with your data and rules
@@ -103,9 +103,9 @@ class ProjectsController extends Controller
         }
         $project = projects::create([
             'project_title' => $request['project_title'],
-            'project_type' => $request['email'],
+            'project_type' => $request['project_type'],
             'created_by' => Auth::user()->id,
-            'client' => $request['client'],
+            'client_id' => $request['client'],
             'start_date' => $request['start_date'],
             'end_date' => $request['end_date'],
             'project_image' => $imagePath,
@@ -114,31 +114,31 @@ class ProjectsController extends Controller
             'rate' => $request['rate'],
         ]);
         // Get the ID of the created project
-        $projectId = $project->id;
-        // Define an array of phase names
-        $phaseNames = [
-            'Formation Phase',
-            'Requirement/Planning Phase',
-            'Design Phase',
-            'Development Phase',
-            'Testing Phase',
-            'Release Phase',
-            'Maintenance Phase',
-        ];
+        if ($project) {
+            $projectId = $project->id;
+            // Define an array of phase names
+            $phaseNames = [
+                'Formation Phase',
+                'Requirement/Planning Phase',
+                'Design Phase',
+                'Development Phase',
+                'Testing Phase',
+                'Release Phase',
+                'Maintenance Phase',
+            ];
 
-
-        // Create the phases for the project with one-day duration
-        foreach ($phaseNames as $phaseName) {
-            phases::create([
-                'projects_id' => $projectId,
-                'phase' => $phaseName,
-                'start_date' => $request['start_date'],
-                'end_date' => $request['end_date'],
-                'status' => 'Pending',
-            ]);
+            // Create the phases for the project with one-day duration
+            foreach ($phaseNames as $phaseName) {
+                phases::create([
+                    'projects_id' => $projectId,
+                    'phase' => $phaseName,
+                    'start_date' => $request['start_date'],
+                    'end_date' => $request['end_date'],
+                    'status' => 'Pending',
+                ]);
+            }
         }
-
-        return redirect()->back()->with('success', 'Project added successfully');
+        return redirect()->back()->with('success', 'Project added successfully --' . $projectId . '');
     }
 
     /**
@@ -196,7 +196,7 @@ class ProjectsController extends Controller
         if ($project) {
             // Define your validation rules
             $rules = [
-                'project_title' => 'required|max:255|unique:projects',
+                'project_title' => 'required|max:255',
                 'client' => 'required|numeric|exists:clients,id',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after:start_date',
@@ -220,6 +220,7 @@ class ProjectsController extends Controller
             }
             if ($request->hasFile('project_image')) {
                 $imagePath = $request->file('project_image')->store('public/projects');
+                $imagePath = str_replace('public/', '', $imagePath);
             } else {
                 $imagePath = "images/no-image.png";
             }

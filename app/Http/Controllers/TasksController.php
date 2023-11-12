@@ -63,10 +63,7 @@ class TasksController extends Controller
 
         // Check if the validation fails
         if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput();
+            return response()->json(['errors' => $validator->errors()]);
         }
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -75,13 +72,16 @@ class TasksController extends Controller
             // Store the file in the "app/storage/public/status" folder
             $file->storeAs('public/status', $filename);
             // Update the "file" field in your database with the stored file path
+        } else {
+            $file = null;
         }
         $image = null;
+        $order = 1;
         $task = tasks::create([
             'task' => $request['task'],
             'description' => $request['description'],
             'phases_id' => $request['phase'],
-            'order' => $request['task_description'],
+            'order' => $order,
             'image' => $image,
             'file' => $file,
             'deadline' => $request['deadline'],
@@ -96,7 +96,9 @@ class TasksController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $task = tasks::find($id);
+        return response()->json($task);
+
     }
 
     /**
@@ -104,7 +106,8 @@ class TasksController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $task = tasks::find($id);
+        return response()->json($task);
     }
 
     /**
@@ -112,7 +115,54 @@ class TasksController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $task = tasks::find($id);
+        if ($task !== null) {
+            // Define your validation rules
+            $rules = [
+                'task' => 'required|max:255|string',
+                'description' => 'required|max:255|string',
+                'phase' => 'required|exists:phases,id',
+                'order' => 'string',
+                'image' => 'string',
+                'file' => 'file|mimes:pdf,doc,docx',
+                'deadline' => 'nullable|max:100|date',
+                'status' => 'required|max:255|string',
+            ];
+
+            // Create a validator instance with your data and rules
+            $validator = Validator::make($request->all(), $rules);
+
+            // Check if the validation fails
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()]);
+            }
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $filename = time() . '_' . $file->getClientOriginalName();
+
+                // Store the file in the "app/storage/public/status" folder
+                $file->storeAs('public/status', $filename);
+                // Update the "file" field in your database with the stored file path
+            } else {
+                $file = null;
+            }
+            $image = null;
+            $order = 1;
+            $task = tasks::update([
+                'task' => $request['task'],
+                'description' => $request['description'],
+                'phases_id' => $request['phase'],
+                'order' => $order,
+                'image' => $image,
+                'file' => $file,
+                'deadline' => $request['deadline'],
+                'status' => $request['status'],
+            ]);
+            // Redirect back or to a success page
+            return response()->json(['success' => true, 'message' => 'Task added succesfully']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Task anot found!']);
+        }
     }
 
     /**

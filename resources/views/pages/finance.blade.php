@@ -32,7 +32,7 @@
                         <option value="9">September</option>
                         <option value="10">October</option>
                         <option value="11">November</option>
-                        <option value="10">December</option>
+                        <option value="12">December</option>
                         <!-- Add options for all available months -->
                     </select>
                 </div>
@@ -97,13 +97,11 @@
                             <td>{{ $transaction->description }}</td>
                             <td class="transactions-actions dt-hidden" style="display: none" colspan="6">
                                 <button data-route="{{ route('finances.show', $transaction->id) }}"
-                                    data-id="{{ $transaction->id }}" class="btn btn-sm btn-outline-secondary"><i
-                                        class="fa fa-eye" disabled></i></button>
+                                    class="btn btn-sm btn-outline-secondary"><i class="fa fa-eye" disabled></i></button>
                                 <button data-route="{{ route('finances.edit', $transaction->id) }}"
                                     data-id="{{ $transaction->id }}" class="btn btn-sm btn-outline-success"><i
                                         class="fa fa-pencil"></i></button>
                                 <button data-route="{{ route('finances.destroy', $transaction->id) }}"
-                                    data-id="{{ $transaction->id }}"
                                     class="btn btn-sm btn-outline-danger delete-item"><i
                                         class="fa fa-trash"></i></button>
                             </td>

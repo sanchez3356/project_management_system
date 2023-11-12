@@ -244,7 +244,29 @@ textarea.no-resize {
         transform: rotate(-360deg);
     }
 }
-
+.skeleton-loader {
+    display: flex;
+    align-items: center;
+  }
+  
+  .skeleton-loader-item {
+    width: 100px;
+    height: 20px;
+    margin-right: 10px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+  
+  @keyframes loading {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  
 body {
     background-color: var(--body-color);
     font-family: "Ubuntu", sans-serif;
@@ -276,6 +298,28 @@ table.dataTable td.dt-control:before {
     width: 16px;
     height: 16px;
     line-height: 16px;
+}
+.thumbnail {
+    padding: 0.25rem;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    max-width: 100%;
+}
+.task-edit,.task-show {
+    cursor: pointer;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+
+}
+.task-edit:hover >i,.task-show:hover >i{
+    color: var(--primary-color);
+}
+.task-edit:active >i,.task-show:active >i{
+    transform: scale(1.4);
+    color: var(--primary-color);
 }
 #search-results {
     -moz-transition: all 0.3s ease-in-out;

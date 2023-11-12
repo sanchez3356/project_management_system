@@ -68,7 +68,8 @@
                 <div class="icon me-3">
                     <img width="70px" height="55px"
                         src="{{asset('storage/' . Auth::user()->avatar) ?: asset('storage/avatars/male.png') }}"
-                        class="rounded-circle img-fluid" alt="{{ Auth::user()->username }}'s user avatar" />
+                        class="rounded-circle img-fluid profilePreview"
+                        alt="{{ Auth::user()->username }}'s user avatar" />
                 </div>
                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
                     aria-expanded="false">
@@ -79,7 +80,7 @@
                         <li><a class="dropdown-item" href="{{ route('profiles.index') }}">Profile</a></li>
                         @endif
                         <li><a class="dropdown-item" href="#">Preferences</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <li><a class="dropdown-item" href="{{ route('profiles.create') }}">Users</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

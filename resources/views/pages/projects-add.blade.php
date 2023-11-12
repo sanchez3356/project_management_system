@@ -7,8 +7,15 @@
 <div class="row clearfix">
     <div class="col-12">
         <div class="card">
-            <p>Total Projects: {{ $projectCount }} {{ str_replace('.', ' / ', Route::currentRouteName()) }}
-            </p>
+            <div class="card-header d-flex justify-content-start align-items-center gap-4">
+                <h6>Total projects: <span class="fw-bold"> {{ $projectCount }}</span></h6>
+                <h6>{{ isset($project) ? 'Edit ' . $project->project_title : 'Create new project' }}</h6>
+                @if(isset($project))
+                <button type="button" class="btn justify-self-end btn-sm btn-success"><i class="fas fa-eye me-2"></i><a
+                        class="link-light" href="{{ route('projects.show', $project->id) }}"> Project
+                        Details</a></button>
+                @endif
+            </div>
             @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show">
                 {{ session('success') }}
@@ -46,12 +53,13 @@
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <select class="form-select @error('project_type') is-invalid @enderror" name="project_type"
-                                aria-label="Default select example"
-                                value="{{ old('project_type', isset($project) ? $project->project_type : '') }}"
-                                required>
+                                aria-label="Default select example" required>
                                 <option>Select project type</option>
                                 @foreach($projectTypes as $projectType)
-                                <option value="{{ $projectType->id }}">{{ $projectType->project_type }}</option>
+                                <option value="{{ $projectType->id }}"
+                                    {{ (isset($project) && $project->project_type == $projectType->id) ? 'selected' : '' }}>
+                                    {{ $projectType->project_type }}
+                                </option>
                                 @endforeach
                             </select>
                             @error('project_type')
@@ -60,11 +68,13 @@
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <select class="form-select @error('client') is-invalid @enderror" name="client"
-                                aria-label="Default select example"
-                                value="{{ old('client', isset($project) ? $project->client : '') }}">
+                                aria-label="Default select example" required>
                                 <option>Select Client Name</option>
                                 @foreach($clients as $client)
-                                <option value="{{ $client->id }}">{{ $client->username }}</option>
+                                <option value="{{ $client->id }}"
+                                    {{ (isset($project) && $project->client_id == $client->id) ? 'selected' : '' }}>
+                                    {{ $client->username }}
+                                </option>
                                 @endforeach
                             </select>
                             @error('client')
@@ -105,12 +115,17 @@
                         </div>
                         <div class="col-md-3 col-sm-12">
                             <select class="form-select @error('priority') is-invalid @enderror" name="priority"
-                                aria-label="Default select example"
-                                value="{{ old('priority', isset($project) ? $project->priority : '') }}" required>
-                                <option>Select Priority</option>
-                                <option value="high">High</option>
-                                <option value="medium">Medium</option>
-                                <option value="low">Low</option>
+                                aria-label="Default select example" required>
+                                <option value="">Select Priority</option>
+                                <option value="high"
+                                    {{ (isset($project) && $project->priority === 'high') ? 'selected' : '' }}>High
+                                </option>
+                                <option value="medium"
+                                    {{ (isset($project) && $project->priority === 'medium') ? 'selected' : '' }}>Medium
+                                </option>
+                                <option value="low"
+                                    {{ (isset($project) && $project->priority === 'low') ? 'selected' : '' }}>Low
+                                </option>
                             </select>
                             @error('priority')
                             <div class="text-danger">{{ $message }}</div>

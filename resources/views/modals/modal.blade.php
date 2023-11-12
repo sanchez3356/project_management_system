@@ -130,7 +130,8 @@
     </div>
 </div>
 <!-- add project task modal  -->
-<div class="modal fade" id="taskModal" tabindex="-1" style="display: none;" aria-hidden="true">
+<div class="modal fade" id="taskModal" tabindex="-1" data-route="{{ route('tasks.update', '') }}" style="display: none;"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="form">
         <form id="task_form" class="modal-content" method="POST" action="{{ route('tasks.store') }}"
             enctype="multipart/form-data">
@@ -160,7 +161,7 @@
                     <div class="col-12">
                         <select name="status" class="form-select" aria-label="Default select example">
                             <option>Task Status</option>
-                            <option value="planned">Plannned</option>
+                            <option value="planned" selected>Plannned</option>
                             <option value="in progress">In progress</option>
                             <option value="complete">Complete</option>
                         </select>
@@ -185,15 +186,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 Are you sure you want to delete this item?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
             </div>
         </div>

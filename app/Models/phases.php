@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class phases extends Model
 {
     use HasFactory;
-    protected $fillable = ['project_id', 'phase', 'start_date', 'end_date', 'status'];
+    protected $fillable = ['projects_id', 'phase', 'start_date', 'end_date', 'status'];
     /**
      * Get the phase that project belongs to.
      *

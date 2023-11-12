@@ -12,8 +12,7 @@ class tasks extends Model
     protected $fillable = [
         'task',
         'description',
-        'phase_id',
-        'order',
+        'phases_id',
         'order',
         'image',
         'file',

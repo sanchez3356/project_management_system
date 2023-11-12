@@ -8,7 +8,7 @@
     <div class="col-lg-4 co-m-12">
         <div class="card mb-3 profile-header">
             <div class="card-body text-center">
-                <div class="profile-image mb-3"><img
+                <div class="profilePreview mb-3"><img width="200px" height="200px"
                         src="{{asset('storage/' . Auth::user()->avatar) ?: asset('storage/avatars/male.png') }}"
                         class="rounded-circle" alt="{{ Auth::user()->username }} user avatar">
 
@@ -25,9 +25,10 @@
                 </div>
                 <div class="mt-3">
                     <button class="btn btn-primary">Default avatar</button>
-                    <button class="btn btn-outline-secondary"
-                        onclick="document.getElementById('avatar').click();">change avatar</button>
-                    <input class="d-none" type="image" name="avatar" id="avatar">
+                    <label class="btn btn-outline-secondary" for="userAvatar">
+                        change avatar</label>
+                    <input class="d-none" type="file" name="userAvatar" id="userAvatar"
+                        data-url="{{ route('profiles.update', Auth::user()->id) }}">
                 </div>
             </div>
         </div>
@@ -203,7 +204,7 @@
         </div>
         <div class="tab-pane fade" id="Settings" role="tabpanel" aria-labelledby="Settings-tab">
             <div class="card mb-3 position-relative">
-                <form id="basic_infoo" class="card-body" action="{{ route('profiles.update', Auth::user()->id) }}"
+                <form id="basic_info" class="card-body" action="{{ route('profiles.update', Auth::user()->id) }}"
                     method="POST">
                     @method('PUT')
                     @csrf
@@ -224,7 +225,7 @@
                             </div>
                             <div class="mb-3">
                                 <input type="text" name="jobTitle"
-                                    value="{{ old('jobTitle', isset($profile) ? $profile->title : '') }}"
+                                    value="{{ old('jobTitle', isset($profile) ? $profile->job_title : '') }}"
                                     class="form-control" placeholder="Job title">
                                 <div class="text-danger" id="jobTitle-error"></div>
                             </div>
@@ -551,13 +552,13 @@
                     </div>
                     <span class="formLoader"></span>
                     <button type="submit" name="personal-details" class="btn btn-primary"
-                        data-section="account-details">Update</button>
+                        data-section="personal-details">Update</button>
                     &nbsp;&nbsp;
                     <button type="button" class="btn btn-secondary">Cancel</button>
                 </form>
             </div>
             <div class="card mb-3">
-                <form id="acc_infoo" class="card-body" action="{{ route('profiles.update', Auth::user()->id) }}"
+                <form id="acc_info" class="card-body" action="{{ route('profiles.update', Auth::user()->id) }}"
                     method="POST">
                     @method('PUT')
                     @csrf
@@ -606,7 +607,8 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" name="account-details" class="btn btn-primary">Update</button>
+                    <button type="submit" name="account-details" class="btn btn-primary"
+                        data-section="account-details">Update</button>
                     &nbsp;&nbsp;
                     <button class="btn btn-secondary">Cancel</button>
                 </form>

@@ -4,7 +4,6 @@
 @section('content')
 <!--  Home section content start  -->
 <div class="row g-3 mb-2">
-
     <div class="col-12">
         <!-- Slider container -->
         <div class="swiper-container p-3 position-relative overflow-hidden">
@@ -320,7 +319,7 @@
                                 Project</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{ route('projects.index') }}">Projects list</a>
+                            <a class="dropdown-item" href="{{ route('projects.index') }}">Projects list</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ route('projects.grid') }}">Projects grid</a>
@@ -365,18 +364,23 @@
                                 <small>Completion with: {{ $progress }}%</small>
                             </td>
                             <td>
-                                <img class="avatar rounded" src="" data-bs-toggle="tooltip" data-bs-placement="left"
-                                    alt="Avatar" aria-label="Team Lead" data-bs-original-title="Team Lead" />
+                                <img width="45px" height="45px" class="avatar rounded"
+                                    src="{{ asset('storage/' . $project->clients->avatar) ?: asset('storage/avatars/male.png')}}"
+                                    data-bs-toggle="tooltip" data-bs-placement="left"
+                                    alt="{{$project->clients->username}}'s Avatar"
+                                    aria-label="{{$project->clients->username}}"
+                                    data-bs-original-title=" {{$project->clients->username}}" />
                             </td>
                             <td>{{ $project->rate }} </td>
-                            <td><span class="badge bg-success">{{ $project->priority }}</span></td>
+                            <td><span class=" badge bg-success">{{ $project->priority }}</span>
+                            </td>
                             <td class="project-actions dt-hidden" style="display: none">
                                 <a href="{{ route('projects.show', $project->id) }}"
                                     class="btn btn-sm btn-outline-secondary"><i class="fa fa-eye"></i></a>
                                 <a href="{{ route('projects.edit', $project->id) }}"
                                     class="btn btn-sm btn-outline-success"><i class="fa fa-pencil"></i></a>
                                 <button data-route="{{ route('projects.destroy', $project->id) }}"
-                                    data-id="{{ $project->id }}" class="btn btn-sm btn-outline-danger delete-item"><i
+                                    class="btn btn-sm btn-outline-danger delete-item"><i
                                         class="fa fa-trash"></i></button>
                             </td>
                         </tr>

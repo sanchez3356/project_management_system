@@ -48,14 +48,15 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
     /**
-     * Get the profile account associate with the client
+     * Get the profile account associate with the user
      *
      * @return MorphOne
      */
-    public function profiles()
+    public function profile()
     {
         return $this->morphOne(profiles::class, 'profileable');
     }
+
     /**
      * Get the accounts that belong to the user
      *

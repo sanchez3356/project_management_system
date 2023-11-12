@@ -38,22 +38,22 @@ class clients extends Model
      *
      * @return MorphOne
      */
-    public function profiles()
+    public function profile()
     {
         return $this->morphOne(profiles::class, 'profileable');
     }
-        /**
-     * Get the projecvts that belong to the client
+    /**
+     * Get the projects that belong to the client
      *
      * @return HasMany
      */
 
-     public function projects()
-     {
-         return $this->hasMany(projects::class, 'client_id'); // 'client_id' is the foreign key column in the 'projects' table
-     }
- 
-        protected static function boot()
+    public function projects()
+    {
+        return $this->hasMany(projects::class, 'client_id'); // 'client_id' is the foreign key column in the 'projects' table
+    }
+
+    protected static function boot()
     {
         parent::boot();
 

@@ -39,9 +39,9 @@ class projects extends Model
      * @return BelongsTo
      */
 
-    public function clients()
-    {
-        return $this->belongsTo(clients::class, 'project_id');
-    }
-
+     public function clients()
+     {
+         return $this->belongsTo(clients::class, 'client_id');
+     }
+     
 }

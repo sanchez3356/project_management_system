@@ -76,14 +76,16 @@ class RegisterController extends Controller
         ]);
 
 
-        // Create a profile associated with the user
-        $profile = profiles::create([
-            'email' => $user->email,
-            'photo' => $defaultAvatar,
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-        ]);
-
+        if ($user) {
+            $profile = profiles::create([
+                'profileable_type' => 'App\Models\User',
+                'profileable_id' => $user->id,
+                'email' => $user->email,
+                'photo' => $defaultAvatar,
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+            ]);
+        }
         return $user;
 
     }

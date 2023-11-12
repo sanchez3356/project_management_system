@@ -19,12 +19,13 @@ class FinanceController extends Controller
     {
         $user = Auth::user();
         $profile = profiles::where('email', $user->email)->first();
+        $pageTitle = "Accounts";
 
         // Check if the user has any accounts
         $account = $user->accounts;
         if ($account->isEmpty()) {
             // Redirect to a page or show a message for users with no accounts
-            return redirect()->route('home');
+            return view('pages.accounts', compact('user','profile','pageTitle'));
         }
 
         // Check if the user has any budgets

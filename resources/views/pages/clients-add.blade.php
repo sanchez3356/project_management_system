@@ -21,10 +21,10 @@
     </div>
     @endif
     @if(isset($id))
-    <form class="card-body" method="POST" action="{{ route('clients.update', $id) }}">
+    <form class="card-body" method="POST" action="{{ route('clients.update', $id) }}" enctype="multipart/form-data">
         @method('PUT')
         @else
-        <form class="card-body" method="POST" action="{{ route('clients.store') }}">
+        <form class="card-body" method="POST" action="{{ route('clients.store') }}" enctype="multipart/form-data">
             @endif
             @csrf
             <div class="row g-3">
@@ -83,8 +83,7 @@
                 </div>
                 <div class="col-md-3 col-sm-12">
                     <input type="file" name="avatar" class="form-control @error('avatar') is-invalid @enderror"
-                        placeholder="Avatar *" value="{{ old('avatar', isset($avatar) ? $client->avatar : '') }}"
-                        required />
+                        placeholder="Avatar *" value="{{ old('avatar', isset($avatar) ? $client->avatar : '') }}" />
                     @error('avatar')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror

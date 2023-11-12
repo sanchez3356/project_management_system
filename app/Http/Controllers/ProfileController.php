@@ -8,10 +8,10 @@ use App\Models\transactions;
 use App\Models\profiles;
 use App\Models\inbox;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Request;
 
 class ProfileController extends Controller
 {
@@ -36,7 +36,16 @@ class ProfileController extends Controller
      */
     public function create()
     {
-        //
+        // $users = User::get();
+        $users = User::with('profile')->get();
+        $profiles = profiles::get();
+
+        // Retrieve the inbox from the database
+        $inbox = inbox::get(); // Assuming "inbox" is your Eloquent model
+        $pageTitle = 'Users';
+
+        // You can pass both the project types and project count to the view
+        return view('pages.users', compact('profiles','users','inbox', 'pageTitle'));
     }
 
     /**
@@ -69,27 +78,25 @@ class ProfileController extends Controller
     public function update(Request $request, string $id)
     {
         $user = User::find($id);
-        if ($user) {
-
-            if (request()->has('account-details')) {
+        if ($user !== null) {
+            if (request()->has('username')) {
                 // Process account details update
-                // Validate the form data
                 $validator = Validator::make($request->all(), [
                     'username' => ['required', 'string', 'max:255'],
                     'email' => ['required', 'string', 'email', 'max:255'],
                     'current' => ['required', 'string'],
-                    'phone' => ['required', 'numeric', 'digits:10'],
-                    'new' => ['required', 'string', 'min:8', 'confirmed'],
+                    'phone' => ['required', 'numeric', 'digits:10', 'unique:profiles'],
+                    'new' => ['nullable', 'string', 'min:8', 'confirmed'],
                 ]);
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()]);
                 }
 
                 // Get the authenticated user
-                // $user = Auth::user();
+                $me = Auth::user();
 
                 // Check if the current password is correct
-                if (!Hash::check($request->input('current'), $user->password)) {
+                if (!Hash::check($request->input('current'), $me->password)) {
                     return response()->json(['errors' => ['current' => 'Current password is incorrect']]);
                 }
 
@@ -102,78 +109,98 @@ class ProfileController extends Controller
                 $profile = profiles::where('email', $user->email)->first();
 
                 if ($profile) {
-                    $profile->username = $request->input('username');
                     $profile->email = $request->input('email');
                     $profile->phone = $request->input('phone');
                     $profile->address = $request->input('address');
                     $profile->save();
                 }
 
-                // Update the password
-                $user->password = Hash::make($request->input('new'));
-                $user->save();
+                // Update the password if 'new' input has a value
+                if ($request->has('new') && !empty($request->input('new'))) {
+                    $user->password = Hash::make($request->input('new'));
+                    $user->save();
+                }
+                return response()->json(['success' => true, 'message' => 'User account updated succesfully ']);
 
-                return response()->json(['success' => true, 'message' => 'User account updated succesfully']);
+            } elseif (request()->has('firstName')) {
 
-            }
-
-            if (request()->has('personal-details')) {
                 // // Process personal details update
-                // $validator = Validator::make($request->all(), [
-                //     'firstName' => ['required', 'string', 'max:100'],
-                //     'lastName' => ['required', 'string', 'max:100'],
-                //     'jobTitle' => ['required', 'string', 'max:100'],
-                //     'gender' => ['required', 'string', 'max:10'],
-                //     'birthdate' => ['required', 'date'],
-                //     'website' => ['required', 'url'],
-                //     'address1' => ['string', 'max:200'],
-                //     'address2' => ['string', 'max:200'],
-                //     'city' => ['required', 'string', 'max:100'],
-                //     'county' => ['string', 'max:100'],
-                //     'country' => ['required', 'string', 'max:100'],
-                // ]);
-                $request->validate([
-                    'firstName'      => 'required|string|max:100',
-                    'lastName'      => 'required|string|max:100',
-                    'jobTitle'      => 'required|string|max:100',
-                    'gender'      => 'required|string|max:10',
-                    'birthdate'      => 'required|date',
-                    'website'      => 'required|url',
-                    'address1'      => 'string|max:200',
-                    'address2'      => 'string|max:200',
-                    'city'      => 'required|string|max:100',
-                    'county'      => 'string|max:100',
-                    'country'      => 'required|string|max:100',
-                ]);
+                $rules = [
+                    'firstName' => 'required|string|max:100',
+                    'lastName' => 'required|string|max:100',
+                    'jobTitle' => 'required|string|max:100',
+                    'gender' => 'required|string|max:10',
+                    'birthdate' => 'required|date',
+                    'website' => 'required|url',
+                    'address1' => 'string|max:200',
+                    'address2' => 'string|max:200',
+                    'city' => 'required|string|max:100',
+                    'county' => 'string|max:100',
+                    'country' => 'required|string|max:100',
+                ];
+
+                // Create a validator instance with your data and rules
+                $validator = Validator::make($request->all(), $rules);
 
                 // Check if the validation fails
-                if ($request->fails()) {
-                    return response()->json(['errors' => $request->errors()]);
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()]);
                 }
+
                 $photo = null;
                 $profile = profiles::where('email', $user->email)->first();
-                $profile->update([
-                    'first_name' => $request->input('firstName'),
-                    'last_name' => $request->input('lastName'),
-                    'job_title' => $request->input('jobTitle'),
-                    'photo' => $photo,
-                    'bio' => $request->input('bio'),
-                    'gender' => $request->input('gender'),
-                    'birthdate' => $request->input('birthdate'),
-                    'website' => $request->input('website'),
-                    'address1' => $request->input('address1'),
-                    'address2' => $request->input('address2'),
-                    'city' => $request->input('city'),
-                    'county' => $request->input('county'),
-                    'country' => $request->input('country'),
+
+
+                if ($profile) {
+                    $profile->first_name = $request->input('firstName');
+                    $profile->last_name = $request->input('lastName');
+                    $profile->job_title = $request->input('jobTitle');
+                    $profile->photo = $photo;
+                    $profile->bio = $request->input('jobTitle');
+                    $profile->gender = $request->input('gender');
+                    $profile->birthdate = $request->input('birthdate');
+                    $profile->website = $request->input('website');
+                    $profile->address_line1 = $request->input('address1');
+                    $profile->address_line2 = $request->input('address2');
+                    $profile->city = $request->input('city');
+                    $profile->county = $request->input('county');
+                    $profile->country = $request->input('country');
+                    $profile->save();
+                }
+
+                return response()->json(['success' => true, 'message' => 'User profile updated succesfully'], 200);
+
+            } elseif (request()->has('userAvatar')) {
+
+                // Validate the request
+                $request->validate([
+                    'userAvatar' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                    // Adjust the validation rules as needed
                 ]);
 
-                return response()->json(['success' => true, 'message' => 'User profile updated succesfully']);
+                // Check if a file was uploaded
+                if ($request->hasFile('userAvatar')) {
+                    $imagePath = $request->file('userAvatar')->store('public/avatars');
+                    $imagePath = str_replace('public/', '', $imagePath);
+        
+                    // Update the user's avatar URL in the database
+                    $user->avatar = $imagePath;
+                    $user->save();
 
+                    return response()->json(['success' => true, 'message' => 'User avatar updated successfully'], 200);
+                }
+
+                return response()->json(['error' => true, 'message' => 'No file uploaded'], 400);
+
+            } else {
+
+                return response()->json(['success' => false, 'message' => 'Incorrect form subitted']);
             }
 
+        } else {
+
+            return response()->json(['error' => true, 'message' => 'User account not found ' . $id . '--' . $user . '']);
         }
-        return response()->json(['success' => false, 'message' => 'User profile not found']);
     }
 
     /**

@@ -34,7 +34,7 @@ function when($date)
 }
 
 if (!function_exists('profile_progress')) {
-    function profile_progress($user, $profile)
+    function profile_progress($user)
     {
         // Define the fields that indicate profile completion
         $userFieldsToCheck = ['name', 'email', 'avatar'];
@@ -52,7 +52,7 @@ if (!function_exists('profile_progress')) {
 
         // Calculate profiles progress
         $profileProgress = 0;
-        $profileAttributes = $profile->getAttributes(); // Get all profile attributes
+        $profileAttributes = $user->profile->getAttributes(); // Get all profile attributes
 
         $totalProfileFields = count($profileAttributes) - count($profilesFieldsToNotCheck);
 

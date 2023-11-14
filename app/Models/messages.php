@@ -5,8 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class inbox extends Model
+class messages extends Model
 {
     use HasFactory;
-    protected $connection = 'mysql';
+    protected $table = 'messages';
+
+    // Specify the primary key of the table
+    protected $primaryKey = 'id';
 }

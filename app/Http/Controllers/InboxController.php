@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\inbox;
+use Illuminate\Support\Facades\DB;
+use App\Models\messages;
 
 class InboxController extends Controller
 {
@@ -12,14 +13,13 @@ class InboxController extends Controller
      */
     public function index()
     {
-        // Retrieve the inbox from the database
-        $inbox = inbox::all(); // Assuming "inbox" is your Eloquent model
-        $inboxCount = inbox::count(); // Assuming "inbox" is your Eloquent model
+    
+        $messages = DB::connection('portfolio_db')->table('messages')->paginate(50);
+        $messageCount = DB::connection('portfolio_db')->table('messages')->count();
         $pageTitle = "Inbox";
 
-
-        // You can pass both the project types and project count to the view
-        return view('pages.inbox', compact('inbox', 'inboxCount', 'pageTitle'));
+        // You can pass both the messages and messages count to the view
+        return view('pages.inbox', compact('messages', 'messageCount', 'pageTitle'));
     }
 
     /**
@@ -27,7 +27,10 @@ class InboxController extends Controller
      */
     public function create()
     {
-        //
+        $pageTitle = 'Inbox';
+        
+        return view('pages.compose', compact('pageTitle'));
+
     }
 
     /**
@@ -43,7 +46,19 @@ class InboxController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $message = DB::connection('portfolio_db')->table('messages')->find($id);
+        
+        $data = [
+            'id' => $message->id,
+            'email' => $message->email,
+            'phone' => $message->phone,
+            'subject' => $message->subject,
+            'message' => $message->message,
+            'sent' => $message->created_at,
+        ];
+    
+        return view('partials.email', $data);
+
     }
 
     /**
@@ -51,7 +66,20 @@ class InboxController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $pageTitle = 'Inbox';
+        $message = DB::connection('portfolio_db')->table('messages')->find($id);
+        
+        return view('pages.compose', compact('message', 'pageTitle'));
+    }
+    /**
+     * Show the form for forwarding the specified resource.
+     */
+    public function forward(string $id)
+    {
+        $pageTitle = 'Inbox';
+        $message = DB::connection('portfolio_db')->table('messages')->find($id);
+        
+        return view('pages.compose', compact('message', 'pageTitle'));
     }
 
     /**
@@ -67,6 +95,21 @@ class InboxController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $message = DB::connection('portfolio_db')->table('messages')->find($id);
+
+        if (!$message) {
+            // Phase not found
+            return response()->json(['message' => 'Message not found'], 404);
+        }
+
+        // Attempt to delete the Phase
+        try {
+            $message->delete();
+            return response()->json(['message' => 'Message deleted successfully'], 200);
+        } catch (\Exception $e) {
+            // Handle any potential errors
+            return response()->json(['message' => 'Error deleting the transaction Message'], 500);
+        }
+
     }
 }

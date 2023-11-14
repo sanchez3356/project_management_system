@@ -49,8 +49,40 @@
                 <li>
                     <a href="{{ route('Inboxes.index') }}"><i class="fa fa-comments"></i><span>Messages</span></a>
                 </li>
-                <li>
-                    <a href="#"><i class="fa fa-sliders"></i><span>Settings</span></a>
+                <li class="">
+                    <a href="#" class="has-arrow" aria-expanded="false"><i
+                            class="fa fa-sliders"></i><span>Settings</span></a>
+                    <ul class="list-unstyled mm-collapse">
+                        @if (Route::has('Inboxes.index'))
+                        <li><a href="{{ route('Inboxes.index') }}">Dashboard</a></li>
+                        @endif
+                        <li class=""><a href="#" class="has-arrow" aria-expanded="true">Portfolio</a>
+                            <ul class="list-unstyled mm-collapse">
+                                @if (Route::has('Inboxes.index'))
+                                <li><a href="{{ route('Inboxes.index') }}">Preferences</a></li>
+                                @endif
+                                @if (Route::has('Services.index'))
+                                <li><a href="{{ route('Services.index') }}">Services</a></li>
+                                @endif
+                                @if (Route::has('Resume.index'))
+                                <li><a href="{{ route('Resume.index') }}">Resume</a></li>
+                                @endif
+                                @if (Route::has('Portfolio.index'))
+                                <li><a href="{{ route('Portfolio.index') }}">Portfolio</a></li>
+                                @endif
+                                @if (Route::has('Reviews.index'))
+                                <li><a href="{{ route('Reviews.index') }}">Reviews</a></li>
+                                @endif
+                                @if (Route::has('Blogs.index'))
+                                <li><a href="{{ route('Blogs.index') }}">Blogs</a></li>
+                                @endif
+                                @if (Route::has('newsletter.index'))
+                                <li><a href="{{ route('newsletter.index') }}">Newsletters</a></li>
+                                @endif
+                            </ul>
+                        </li>
+                    </ul>
+
                 </li>
                 <li>
                     @if (Route::has('logout'))

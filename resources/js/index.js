@@ -473,47 +473,49 @@ const pageCode = {
         }
     },
     Inbox: function () {
-        var url = "/records";
-        fetchData(url, (data) => {
-            // Process the data or perform actions with it
-            // Process the data to separate earnings and spendings
-            const earnings = data.map((item) => ({
-                x: new Date(item.date),
-                y: item.earned || 0,
-            }));
-            const spendings = data.map((item) => ({
-                x: new Date(item.date),
-                y: -item.spent,
-            }));
-            // Create a chart configuration
-            const options = {
-                chart: {
-                    type: "line",
-                    height: 350,
-                },
-                series: [
-                    {
-                        name: "Earnings",
-                        data: earnings,
-                    },
-                    {
-                        name: "Spendings",
-                        data: spendings,
-                    },
-                ],
-                xaxis: {
-                    type: "datetime",
-                },
-            };
-            // Create the chart
-            const chart = new ApexCharts(
-                document.querySelector("#financeChart"),
-                options
-            );
+        /////////////////////////////////////////
+        /////////////////////////////////////////
+        /////////////////////////////////////////
+        /////////////////////////////////////////
+        /////////////////////////////////////////
+        /////////////////////////////////////////
+        var options = {
+            valueNames: ["sub", "dep", "time"], // Define the classes or attributes you want to search and sort
+        };
+        var userList = new List("mail", options);
 
-            // Render the chart
-            chart.render();
+        $("#flexCheckDefault").change(function () {
+            // Check or uncheck all checkboxes in the mail list based on the main checkbox state
+            $(".mail-list .form-check-input").prop("checked", this.checked);
         });
+        // Individual checkbox change event
+        $(".mail-list .clearfix").click(function () { 
+            const url = $(this).data("url");
+            
+            $.ajax({
+                url: url, // Replace with the actual URL of your controller action
+                method: 'GET',
+                success: function (data) {
+                    $('#mail-detail-open').html(data); // Assuming you have a container div with id 'card-container'
+                    $('#mail-detail-open').show();
+                },
+                error: function (error) {
+                    console.error('Error fetching details:', error);
+                }
+            });
+        });
+
+        $(".mail-list .form-check-input").change(function () {
+            // Uncheck the main checkbox if any individual checkbox is unchecked
+            if (!$(this).prop("checked")) {
+                $("#flexCheckDefault").prop("checked", false);
+            }
+        });
+    },
+    News: function () {
+        // Initialize the DataTable
+        var table = $("#email_list").DataTable();
+
     },
     ProjectsDetails: function () {
         // Function to update delete button state based on checkbox status
@@ -611,7 +613,7 @@ $(document).ready(function () {
     $(".dropify").dropify();
     // Sumernote text input
     $("#summernote").summernote({
-        placeholder: "Please paste your description here",
+        placeholder: "The toolbar can be customized and it also supports various callbacks such as <code>oninit</code>, <code>onfocus</code>, <code>onpaste</code> and many more.",
         tabsize: 2,
         height: 120,
     });

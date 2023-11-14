@@ -11,6 +11,10 @@ use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\RecordsController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\ReviewsController;
+use App\Http\Controllers\PortfolioController;
+use App\Http\Controllers\ResumeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,13 +50,19 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('clients', ClientsController::class);
     Route::get('clients/{client}/edit', [ClientsController::class, 'edit'])->name('clients.edit');
     Route::resource('profiles', ProfileController::class)->only(['index', 'update', 'create']);
-    Route::resource('Inboxes', InboxController::class)->only(['index', 'store', 'destroy']);
+    Route::resource('Inboxes', InboxController::class);
+    Route::resource('Reviews', ReviewsController::class);
+    Route::resource('Portfolio', PortfolioController::class);
+    Route::resource('Blogs', PortfolioController::class);
+    Route::resource('Resume', ResumeController::class);
+    Route::get('Inboxes/{id}/forward', [InboxController::class, 'forward'])->name('Inboxes.forward');
     Route::resource('phases', PhaseController::class)->only(['store', 'destroy', 'update']);
     Route::resource('finances', FinanceController::class);
     Route::resource('accounts', AccountsController::class)->only(['edit', 'store', 'destroy']);
     Route::get('/records/project', [RecordsController::class, 'projects'])->name('records.project');
     Route::get('/records/finance', [RecordsController::class, 'transactions'])->name('records.finance');
     Route::resource('/tasks', TasksController::class);
+    Route::resource('/newsletter', NewsletterController::class)->only(['index', 'update', 'delete']);
     // Route::get('/records', [RecordsController::class, 'getTasksData'])->name('records.tasks');
     // Route::resource('activities', ActivitiesController::class)->only(['index', 'store', 'destroy']);
 });

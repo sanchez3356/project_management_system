@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class projects extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $connection = 'mysql';
     protected $fillable = [
         'project_title',
         'project_type',

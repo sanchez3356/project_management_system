@@ -56,6 +56,9 @@
                         @if (Route::has('Inboxes.index'))
                         <li><a href="{{ route('Inboxes.index') }}">Dashboard</a></li>
                         @endif
+                        @if (Route::has('gallery.index'))
+                        <li><a href="{{ route('gallery.index') }}">Gallery</a></li>
+                        @endif
                         <li class=""><a href="#" class="has-arrow" aria-expanded="true">Portfolio</a>
                             <ul class="list-unstyled mm-collapse">
                                 @if (Route::has('Inboxes.index'))

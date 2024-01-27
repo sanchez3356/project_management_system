@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\projects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Models\accounts;
 use App\Models\budgets;
 use App\Models\transactions;
+use App\Models\inbox;
 
 class RecordsController extends Controller
 {
@@ -109,6 +114,79 @@ class RecordsController extends Controller
 
             $data[] = $projectData;
         }
+
+        return response()->json($data);
+    }
+    public function messages()
+    {
+        $messages = [];
+
+        if (request()->has('data') && request()->input('data') != null) {
+            $messages = DB::connection('portfolio_db')
+                ->table('messages')
+                ->where(request()->input('data'), true)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } else {
+            $messages = DB::connection('portfolio_db')
+                ->table('messages')
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
+        $htmlContent = View::make('partials.mail', ['messages' => $messages])->render();
+
+        $data = ['messages' => $messages, 'htmlContent' => $htmlContent];
+
+        return response()->json($data);
+    }
+    public function gallery()
+    {
+        $imageUrls = [];
+
+        if (request()->has('images') && request()->input('images') == 'avatars') {
+            $images = Storage::files('public/avatars');
+        } elseif (request()->has('images') && request()->input('images') == 'projects') {
+            $images = Storage::files('public/projects');
+        } elseif (request()->has('images') && request()->input('images') == 'defaults') {
+            $images = Storage::files('public/images');
+        } elseif (request()->has('images') && request()->input('images') == 'unused') {
+            // Get images in use
+            $usedImages = imagesInUse();
+
+            // Fetch images from three folders and remove 'public/' from each path
+            $allImages = array_merge(
+                array_map(function ($image) {
+                    return Str::replaceFirst('public/', '', $image);
+                }, Storage::files('public/avatars')),
+                array_map(function ($image) {
+                    return Str::replaceFirst('public/', '', $image);
+                }, Storage::files('public/projects')),
+                array_map(function ($image) {
+                    return Str::replaceFirst('public/', '', $image);
+                }, Storage::files('public/images'))
+            );
+
+            // Filter out used images
+            $images = array_diff($allImages, $usedImages);
+        } else {
+            // Fetch images from three folders
+            $avatars = Storage::files('public/avatars');
+            $projects = Storage::files('public/projects');
+            $defaults = Storage::files('public/images');
+
+            // Combine images from all three folders
+            $images = array_merge($avatars, $projects, $defaults);
+        }
+
+        // Remove 'public/' from the URL using the asset function
+        $imageUrls = array_map(function ($image) {
+            return asset('storage/' . Str::replaceFirst('public/', '', $image));
+        }, $images);
+
+        $cards = View::make('partials.gallery', ['imageUrls' => $imageUrls])->render();
+
+        $data = ['imageUrls' => $imageUrls, 'cards' => $cards];
 
         return response()->json($data);
     }

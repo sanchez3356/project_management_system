@@ -24,7 +24,7 @@ return new class extends Migration {
 
             // Define foreign keys
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('account_id')->references('id')->on('accounts');
+            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
         });
     }
 

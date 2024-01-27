@@ -15,6 +15,15 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ResumeController;
+use App\Http\Controllers\EducationController;
+use App\Http\Controllers\CareerController;
+use App\Http\Controllers\ReferenceController;
+use App\Http\Controllers\BlogsController;
+use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\IntrestsController;
+use App\Http\Controllers\SkillsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,14 +62,26 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('Inboxes', InboxController::class);
     Route::resource('Reviews', ReviewsController::class);
     Route::resource('Portfolio', PortfolioController::class);
+    Route::resource('language', LanguageController::class)->only(['store', 'destroy', 'update', 'edit']);
+    Route::resource('interests', IntrestsController::class)->only(['store', 'destroy', 'update', 'edit']);
+    Route::resource('skill', SkillsController::class)->only(['store', 'destroy', 'update', 'edit']);
     Route::resource('Blogs', PortfolioController::class);
+    Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
+    Route::delete('/gallery/{image}', [GalleryController::class, 'delete'])->name('gallery.delete');
+    Route::delete('/gallery/delete-multiple', [GalleryController::class, 'deleteMultiple'])->name('gallery.deleteMultiple');
+    Route::resource('notifications', NotificationsController::class);
     Route::resource('Resume', ResumeController::class);
     Route::get('Inboxes/{id}/forward', [InboxController::class, 'forward'])->name('Inboxes.forward');
     Route::resource('phases', PhaseController::class)->only(['store', 'destroy', 'update']);
+    Route::resource('education', EducationController::class)->only(['store', 'destroy', 'update']);
+    Route::resource('career', CareerController::class)->only(['store', 'destroy', 'update', 'edit']);
+    Route::resource('reference', ReferenceController::class)->only(['store', 'destroy', 'update', 'edit']);
     Route::resource('finances', FinanceController::class);
     Route::resource('accounts', AccountsController::class)->only(['edit', 'store', 'destroy']);
     Route::get('/records/project', [RecordsController::class, 'projects'])->name('records.project');
     Route::get('/records/finance', [RecordsController::class, 'transactions'])->name('records.finance');
+    Route::get('/records/messages', [RecordsController::class, 'messages'])->name('records.messages');
+    Route::get('/records/gallery', [RecordsController::class, 'gallery'])->name('records.gallery');
     Route::resource('/tasks', TasksController::class);
     Route::resource('/newsletter', NewsletterController::class)->only(['index', 'update', 'delete']);
     // Route::get('/records', [RecordsController::class, 'getTasksData'])->name('records.tasks');

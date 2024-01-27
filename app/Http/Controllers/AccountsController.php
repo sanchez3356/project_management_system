@@ -54,7 +54,7 @@ class AccountsController extends Controller
         $account->final_balance = $request->input('balance');
         $account->save();
 
-        return response()->json(['success' => true]);    }
+        return response()->json(['success' => true]);}
 
     /**
      * Display the specified resource.

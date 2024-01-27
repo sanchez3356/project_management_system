@@ -19,7 +19,7 @@
         <div class="card-body">
             <form method="POST" action="{{ route('login') }}">
                 @csrf
-                <div class="form-floating mb-1">
+                <div class="form-floating mb-2">
                     <input id="email" type="email" name="email"
                         class="form-control @error('email') is-invalid @enderror" placeholder="name@example.com"
                         value="{{ old('email') }}" required autocomplete="email" autofocus />

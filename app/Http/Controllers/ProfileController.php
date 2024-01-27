@@ -189,15 +189,21 @@ class ProfileController extends Controller
 
                     return response()->json(['success' => true, 'message' => 'User avatar updated successfully'], 200);
                 }
-
+                
                 return response()->json(['error' => true, 'message' => 'No file uploaded'], 400);
+                
+            } elseif (request()->has('avatar')) {
+                
+                $user->avatar = 'avatars/male.png';
+                $user->save();
 
+                return response()->json(['success' => true, 'message' => 'User avatar removed successfully'], 200);
             } else {
 
                 return response()->json(['success' => false, 'message' => 'Incorrect form subitted']);
             }
 
-        } else {
+        }  else {
 
             return response()->json(['error' => true, 'message' => 'User account not found ' . $id . '--' . $user . '']);
         }

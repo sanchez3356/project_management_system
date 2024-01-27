@@ -64,6 +64,10 @@
                                 <button data-route="{{ route('projects.destroy', $project->id) }}"
                                     data-id="{{ $project->id }}" class="btn btn-sm btn-outline-danger delete-item"><i
                                         class="fa fa-trash"></i></button>
+                                <button data-post="{{ route('Portfolio.store') }}"
+                                    data-route="{{ route('Portfolio.show', $project->id) }}"
+                                    class="btn btn-sm btn-outline-warning favorite"><i
+                                        class="fas fa-heart"></i></button>
                             </td>
                         </tr>
                         @php
@@ -77,5 +81,4 @@
     </div>
 </div>
 <!-- Projects list section content end  -->
-
 @endsection

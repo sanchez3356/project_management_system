@@ -74,7 +74,7 @@ class ClientsController extends Controller
             'id' => 'numeric',
             'first_name' => 'required|max:100|string',
             'last_name' => 'required|max:100|string',
-            'email' => 'required|string|email|max:255|unique:clients',
+            'email' => 'required|string|email|max:255|unique:clients|unique:profiles',
             'username' => 'required|max:35|string|unique:clients',
             'password' => 'required|string|min:8|confirmed',
             'phone' => 'nullable|max:100|string|unique:profiles',
@@ -131,12 +131,12 @@ class ClientsController extends Controller
         $client = clients::with('profile')->find($id);
         if ($client) {
             // Get the project whose ID matches the 'client' column in the project row
-            $project = projects::find($client->$id);
+            $projects = projects::where('client_id', $client->id)->get();
 
             // Now you have the project, its tasks, and its client
             $pageTitle = "ClientProfile";
 
-            return view('pages.clients-details', compact('client', 'project', 'pageTitle'));
+            return view('pages.clients-details', compact('client', 'projects', 'pageTitle'));
 
         } else {
             $pageTitle = "ClientProfile";

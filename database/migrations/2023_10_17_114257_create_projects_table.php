@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->longText('project_description');
             $table->enum('priority', ['high', 'medium', 'low'])->nullable();
             $table->decimal('rate')->nullable();
+            $table->boolean('favorite')->default(false);
             $table->softDeletes();
             $table->timestamps();
 

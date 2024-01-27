@@ -10,18 +10,17 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('inboxes', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->string('notification', 100);
             $table->string('message');
-            $table->string('names');
-            $table->string('email')->nullable();
-            $table->string('title')->nullable();
             $table->boolean('read')->default(false);
-            $table->boolean('archive')->default(false);
-            $table->boolean('trash')->default(false);
-            $table->boolean('spam')->default(false);
-            $table->boolean('starred')->default(false);
+            $table->enum('type', ['success', 'error', 'warning']);
+            $table->string('icon');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -30,6 +29,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('inboxes');
+        Schema::dropIfExists('notifications');
     }
 };

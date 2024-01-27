@@ -25,7 +25,12 @@ class FinanceController extends Controller
         $account = $user->accounts;
         if ($account->isEmpty()) {
             // Redirect to a page or show a message for users with no accounts
-            return view('pages.accounts', compact('user','profile','pageTitle'));
+            $account = new accounts();
+            $account->user_id = Auth::user()->id;
+            $account->account_name = "'{$user->username}''s account";
+            $account->initial_balance = '0';
+            $account->final_balance = '0';
+            $account->save();
         }
 
         // Check if the user has any budgets
@@ -104,6 +109,15 @@ class FinanceController extends Controller
         // Set other Transaction properties
         $transaction->save();
 
+        // Update the account balance based on the transaction type (income or expenditure)
+        $account = accounts::find(Auth::user()->id);
+        if ($transaction->transaction_type == 'income') {
+            $account->final_balance += $transaction->amount;
+        } elseif ($transaction->transaction_type == 'expenditure') {
+            $account->final_balance -= $transaction->amount;
+        }
+        $account->save();
+
         return response()->json(['success' => true, 'message' => 'Transaction record added succesfully']);
     }
 
@@ -146,6 +160,7 @@ class FinanceController extends Controller
                 return response()->json(['errors' => $validator->errors()]);
             }
 
+            $oldAmount = $transaction->amount;
             $transaction->update([
                 'account_id' => $request['project_title'],
                 'user_id' => Auth::user()->id,
@@ -157,10 +172,19 @@ class FinanceController extends Controller
                 // Update other attributes as needed
             ]);
 
+            // Update the account balance based on the change in transaction amount and type
+            $account = accounts::find(Auth::user()->id);
+            if ($transaction->transaction_type == 'income') {
+                $account->final_balance += ($transaction->amount - $oldAmount);
+            } elseif ($transaction->transaction_type == 'expenditure') {
+                $account->final_balance -= ($transaction->amount - $oldAmount);
+            }
+            $account->save();
+
             return response()->json(['success' => true, 'message' => 'Transaction record added succesfully']);
         } else {
             // Handle the case where no transaction is found with the given ID
-            return  response()->json(['success' => false, 'message' => 'Transaction record not found']);
+            return response()->json(['success' => false, 'message' => 'Transaction record not found']);
         }
     }
 
@@ -175,10 +199,22 @@ class FinanceController extends Controller
             // Phase not found
             return response()->json(['message' => 'Transaction record not found'], 404);
         }
+        // Get the transaction type and amount before deleting
+        $transactionType = $transaction->transaction_type;
+        $transactionAmount = $transaction->amount;
 
-        // Attempt to delete the Phase
+        // Attempt to delete the transaction
         try {
             $transaction->delete();
+
+            // Update the account balance based on the type of transaction being deleted
+            $account = accounts::find(Auth::user()->id);
+            if ($transactionType == 'income') {
+                $account->final_balance -= $transactionAmount;
+            } elseif ($transactionType == 'expenditure') {
+                $account->final_balance += $transactionAmount;
+            }
+            $account->save();
             return response()->json(['message' => 'Transaction record deleted successfully'], 200);
         } catch (\Exception $e) {
             // Handle any potential errors

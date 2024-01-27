@@ -1,5 +1,10 @@
 <?php
 
+use App\Models\clients;
+use App\Models\projects;
+use App\Models\User;
+use App\Models\profiles;
+use App\Models\tasks;
 use Carbon\Carbon;
 
 
@@ -71,30 +76,48 @@ if (!function_exists('profile_progress')) {
 
 if (!function_exists('calculateProjectsCompletionPercentage')) {
     function calculateProjectsCompletionPercentage($projects)
-{
+    {
 
-    $totalProjects = $projects->count();
-    $completedProjects = 0;
+        $totalProjects = $projects->count();
+        $completedProjects = 0;
 
-    foreach ($projects as $project) {
-        // You need to determine a condition that indicates whether the project is completed
-        // Let's assume that the 'status' property indicates the project's completion status
-        if ($project->status === 'completed') {
-            $completedProjects++;
+        foreach ($projects as $project) {
+            // You need to determine a condition that indicates whether the project is completed
+            // Let's assume that the 'status' property indicates the project's completion status
+            if ($project->status === 'completed') {
+                $completedProjects++;
+            }
         }
-    }
 
-    if ($totalProjects > 0) {
-        $completionPercentage = ($completedProjects / $totalProjects) * 100;
-    } else {
-        $completionPercentage = 0; // To avoid division by zero if there are no projects
-    }
+        if ($totalProjects > 0) {
+            $completionPercentage = ($completedProjects / $totalProjects) * 100;
+        } else {
+            $completionPercentage = 0; // To avoid division by zero if there are no projects
+        }
 
-    return $completionPercentage;
+        return $completionPercentage;
+    }
 }
 
+if (!function_exists('imagesInUse')) {
+    function imagesInUse()
+    {
+
+        // For example, from the projects table
+        $projectImages = projects::pluck('project_image')->toArray();
+        // From the clients and users tables
+        $clientAvatars = clients::pluck('avatar')->toArray();
+        $userAvatars = User::pluck('avatar')->toArray();
+        $profileImages = profiles::pluck('photo')->toArray();
+        $taskImages = tasks::pluck('image')->toArray();
+
+        $allImagePaths = array_merge($projectImages, $clientAvatars, $userAvatars, $profileImages, $taskImages);
+
+        return $allImagePaths;
+    }
 
 }
+
 if (!function_exists('project_progress')) {
     function project_progress($project)
     {
@@ -129,6 +152,28 @@ if (!function_exists('project_progress')) {
         return min(100, $progress); // Cap progress at 100%
     }
 }
+
+if (!function_exists('getIconClassName')) {
+    function getIconClassName($interest)
+    {
+        $iconClasses = [
+            'reading' => 'fas fa-book',
+            'music' => 'fas fa-music',
+            'movies' => 'fas fa-film',
+            'swimming' => 'fas fa-film',
+            'driving' => 'fas fa-film',
+            'coding' => 'fas fa-film',
+            // Add more mappings as needed
+        ];
+
+        if (array_key_exists($interest, $iconClasses)) {
+            return $iconClasses[$interest];
+        } else {
+            return 'fas fa-question-circle';
+        }
+    }
+}
+
 // if (!function_exists('project_progress')) {
 // function project_progress($project)
 // {

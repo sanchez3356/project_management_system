@@ -10,7 +10,7 @@
                 <a class="btn btn-primary toggle-email-nav collapsed" data-bs-toggle="collapse" href="#email-nav"
                     role="button"><span class="btn-label"><i class="la la-bars"></i></span>Menu</a>
             </div>
-            <div class="mail-inbox d-flex">
+            <div class="mail-inbox d-flex" data-url="{{ route('records.messages') }}">
                 <div class="mail-left collapse p-3" id="email-nav">
                     <div class="mail-compose mb-3">
                         <a href="{{ route('Inboxes.create') }}" class="btn btn-danger d-block">Compose</a>
@@ -22,22 +22,27 @@
                                     <span class="badge bg-primary float-end">{{ $messageCount }}</span></a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);"><i class="fa fa-location-arrow"></i>Sent
+                                <a href="javascript:void(0);" data-mail="read"><i class="fa fa-location-arrow"></i>Sent
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);"><i class="fa fa-envelope-open"></i>Draft
+                                <a href="javascript:void(0);" data-mail="draft"><i class="fa fa-envelope-open"></i>Draft
                                     <span class="badge bg-info float-end">3</span></a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);"><i class="fa fa-mail-forward"></i>Outbox</a>
+                                <a href="javascript:void(0);" data-mail="outbox"><i
+                                        class="fa fa-mail-forward"></i>Outbox</a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);"><i class="fa fa-star"></i>Starred
+                                <a href="javascript:void(0);" data-mail="spam"><i
+                                        class="fa fa-mail-forward"></i>Spam</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" data-mail="starred"><i class="fa fa-star"></i>Starred
                                     <span class="badge bg-warning float-end">6</span></a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);"><i class="fa fa-trash"></i>Trash
+                                <a href="javascript:void(0);" data-mail="trash"><i class="fa fa-trash"></i>Trash
                                     <span class="badge bg-danger float-end">9</span></a>
                             </li>
                         </ul>
@@ -160,45 +165,11 @@
                     </div>
                     <div class="mail-list">
                         <ul class="list-unstyled mb-0 list">
-                            @foreach($messages as $message)
-                            @php
-                            $status = $message->read ? 'read' : 'unread';
-                            $spam = $message->spam ? 'active' : 'inactive';
-                            @endphp
-                            <li class="clearfix mb-1 {{ $status }}"
-                                data-url="{{ route('Inboxes.show', $message->id) }}">
-                                <div class="mail-detail-left float-start">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault{{ $message->id }}" />
-                                        <label class="form-check-label"
-                                            for="flexCheckDefault{{ $message->id }}"></label>
-                                    </div>
-                                    <a href="javascript:void(0);" class="mail-star {{ $spam }}"><i
-                                            class="fa fa-star"></i></a>
-                                </div>
-                                <div class="mail-detail-right float-start">
-                                    <h6 class="sub">
-                                        <a href="mailto:{{ $message->email }}"
-                                            class="mail-detail-expand">{{ $message->first_name }}
-                                            {{ $message->last_name }}</a>
-                                        <span class="badge bg-secondary mb-0">{{ $message->subject }}</span>
-                                    </h6>
-                                    <p class="dep">
-                                        <span class="">[{{ $message->phone }}]</span> {{ $message->message }}
-                                    </p>
-                                    <span class="time">{{ formatMyDate($message->created_at) }}</span>
-                                </div>
-                                <div class="hover-action">
-                                    <a class="btn btn-warning mr-2" href="javascript:void(0);"><i
-                                            class="fa fa-archive"></i></a>
-                                    <button type="button" class="btn btn-danger delete-item" title="Delete"
-                                        data-route="{{ route('Inboxes.destroy', $message->id) }}">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            </li>
-                            @endforeach
+                            <li class="skeleton-loader-item w-100"></li>
+                            <li class="skeleton-loader-item w-100"></li>
+                            <li class="skeleton-loader-item w-100"></li>
+                            <li class="skeleton-loader-item w-100"></li>
+                            <li class="skeleton-loader-item w-100"></li>
                         </ul>
                     </div>
                     <div class="mail-detail-full" id="mail-detail-open" style="display: none">

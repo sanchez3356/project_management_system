@@ -288,3 +288,248 @@
     </div>
 </div>
 <!-- add Transaction Record modal  -->
+<!-- add Education Record modal  -->
+<div class="modal fade" id="addEducation" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form class="modal-content" id="education_form" method="POST" action="{{ route('education.store') }}"
+            enctype="multipart/form-data">
+            @csrf
+            <div class="modal-header">
+                <h6 class="title" id="educationModalLabel">New Education record</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+                    <input type="hidden" name="profile" value="{{ $profile->id ?? '' }}">
+                    <div class="col-12">
+                        <input type="text" name="school" class="form-control @error('school') is-invalid @enderror"
+                            placeholder="School name .*" value="{{ old('school') }}" required />
+                        <div class="text-danger" id="school-error"></div>
+                    </div>
+                    <div class="col-12">
+                        <select name="qualification" class="form-select" aria-label="Default select example">
+                            <option>Qualification</option>
+                            <option value="degree">Degree</option>
+                            <option value="certificate">Certificate</option>
+                            <option value="diploma">Diploma</option>
+                            <option value="masters">Masters</option>
+                        </select>
+                        <div class="text-danger" id="qualification-error"></div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-daterange input-group d-flex justify-content-around align-items-center"
+                            data-provide="datepicker">
+                            <label class="form-label me-2 mb-0">From</label>
+                            <input type="date" class="form-control" name="from">
+                            <span class="px-3">to</span>
+                            <input type="date" class="form-control" name="to">
+                        </div>
+                        <div class="row ps-4">
+                            <div class="text-danger col-6" id="from-error"></div>
+                            <div class="text-danger col-6" id="to-error"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CLOSE</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- add Education Record modal  -->
+<!-- add Career Record modal  -->
+<div class="modal fade" id="addCareer" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form class="modal-content" id="career_form" method="POST" action="{{ route('career.store') }}"
+            enctype="multipart/form-data">
+            @csrf
+            <div class="modal-header">
+                <h6 class="title" id="careerModalLabel">New Career record</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+                    <input type="hidden" name="profile" value="{{ $profile->id ?? '' }}">
+                    <div class="col-12">
+                        <input type="text" name="title" class="form-control @error('title') is-invalid @enderror"
+                            placeholder="Job title .*" value="{{ old('title') }}" required />
+                        <div class="text-danger" id="title-error"></div>
+                    </div>
+                    <div class="col-12">
+                        <input type="text" name="company" class="form-control @error('company') is-invalid @enderror"
+                            placeholder="Company name .*" value="{{ old('company') }}" required />
+                        <div class="text-danger" id="company-error"></div>
+                    </div>
+                    <div class="col-12">
+                        <input type="text" name="location" class="form-control @error('location') is-invalid @enderror"
+                            placeholder="Job location .*" value="{{ old('location') }}" required />
+                        <div class="text-danger" id="location-error"></div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-daterange input-group d-flex justify-content-around align-items-center"
+                            data-provide="datepicker">
+                            <label class="form-label me-2 mb-0">From</label>
+                            <input type="date" class="form-control" name="from">
+                            <span class="px-3">to</span>
+                            <input type="date" class="form-control" name="to">
+                        </div>
+                        <div class="row ps-4">
+                            <div class="text-danger col-6" id="from-error"></div>
+                            <div class="text-danger col-6" id="to-error"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CLOSE</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- add Career Record modal  -->
+<!-- add Reference Record modal  -->
+<div class="modal fade" id="addReference" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form class="modal-content" id="reference_form" method="POST" action="{{ route('reference.store') }}"
+            enctype="multipart/form-data">
+            @csrf
+            <div class="modal-header">
+                <h6 class="title" id="referenceModalLabel">New Reference record</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+                    <input type="hidden" name="profile" value="{{ $profile->id ?? '' }}">
+                    <div class="col-12">
+                        <input type="text" name="names" class="form-control @error('names') is-invalid @enderror"
+                            placeholder="Refereer name .*" value="{{ old('names') }}" required />
+                        <div class="text-danger" id="names-error"></div>
+                    </div>
+                    <div class="col-12">
+                        <input type="text" name="title" class="form-control @error('title') is-invalid @enderror"
+                            placeholder="Refereer job title .*" value="{{ old('title') }}" required />
+                        <div class="text-danger" id="title-error"></div>
+                    </div>
+                    <div class="col-12">
+                        <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
+                            placeholder="Refereer phone .*" value="{{ old('phone') }}" required />
+                        <div class="text-danger" id="phone-error"></div>
+                    </div>
+                    <div class="col-12">
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                            placeholder="Refereer email .*" value="{{ old('email') }}" required />
+                        <div class="text-danger" id="email-error"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CLOSE</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- add Reference Record modal  -->
+<!-- add Contact Record modal  -->
+<div class="modal fade" id="addContact" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form class="modal-content" id="contact_form" method="POST" action="{{ route('finances.store') }}"
+            enctype="multipart/form-data">
+            @csrf
+            <div class="modal-header">
+                <h6 class="title" id="contactModalLabel">New Contact record</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+                    <div class="col-12">
+                        <input type="text" name="link" class="form-control @error('link') is-invalid @enderror"
+                            placeholder="Link text .*" value="{{ old('link') }}" required />
+                        <div class="text-danger" id="link-error"></div>
+                    </div>
+                    <div class="col-12">
+                        <input type="url" name="url" class="form-control @error('url') is-invalid @enderror"
+                            placeholder="Link url .*" value="{{ old('url') }}" required />
+                        <div class="text-danger" id="url-error"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CLOSE</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- add Contact Record modal  -->
+<!-- add Skill Record modal  -->
+<div class="modal fade" id="addSkill" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form class="modal-content" id="skill_form" method="POST" action="{{ route('skill.store') }}"
+            enctype="multipart/form-data">
+            @csrf
+            <div class="modal-header">
+                <h6 class="title" id="skillModalLabel">New Skill</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+                    <input type="hidden" name="profile" value="{{ $profile->id ?? '' }}">
+                    <div class="col-12">
+                        <input type="text" name="skill" class="form-control @error('skill') is-invalid @enderror"
+                            placeholder="Skill .*" value="{{ old('skill') }}" required />
+                        <div class="text-danger" id="link-error"></div>
+                    </div>
+                    <div class="col-12">
+                        <input type="number" name="skillLevel"
+                            class="form-control @error('skillLevel') is-invalid @enderror" placeholder="Skill level .*"
+                            value="{{ old('skillLevel') }}" required />
+                        <div class="text-danger" id="skillLevel-error"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CLOSE</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- add Skill Record modal  -->
+<!-- add Language Record modal  -->
+<div class="modal fade" id="addLanguage" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form class="modal-content" id="language_form" method="POST" action="{{ route('language.store') }}"
+            enctype="multipart/form-data">
+            @csrf
+            <div class="modal-header">
+                <h6 class="title" id="languageModalLabel">New Language</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+                    <input type="hidden" name="profile" value="{{ $profile->id ?? '' }}">
+                    <div class="col-12">
+                        <input type="text" name="language" class="form-control @error('language') is-invalid @enderror"
+                            placeholder="Language .*" value="{{ old('language') }}" required />
+                        <div class="text-danger" id="language-error"></div>
+                    </div>
+                    <div class="col-12">
+                        <input type="number" name="languageLevel"
+                            class="form-control @error('languageLevel') is-invalid @enderror"
+                            placeholder="Language Level .*" value="{{ old('languageLevel') }}" required />
+                        <div class="text-danger" id="languageLevel-error"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CLOSE</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- add Language Record modal  -->

@@ -262,6 +262,28 @@ const pageCode = {
         submitFormWithAjax("#acc_info", function (response) {
             alert(response.message);
         });
+
+        $("#ProfileVisibility").on("click", function () {
+            var url = $(this).data("url");
+            console.log(url);
+            get(url, (data) => {
+                console.log(data);
+            });
+        });
+        $("#removeAvatar").on("click", function () {
+            var url = $(this).data("url");
+            console.log(url);
+            var formData = new FormData();
+            formData.append("_method", "PUT"); // Add the "_method" field with the value "PUT"
+            formData.append("avatar", "remove");
+
+            console.log(formData);
+
+            postData(url, formData, function (data) {
+                console.log(data);
+            });
+        });
+
         $("#userAvatar").on("change", function () {
             // Get the selected file
             var file = $(this)[0].files[0];
@@ -474,34 +496,36 @@ const pageCode = {
     },
     Inbox: function () {
         /////////////////////////////////////////
-        /////////////////////////////////////////
-        /////////////////////////////////////////
-        /////////////////////////////////////////
-        /////////////////////////////////////////
-        /////////////////////////////////////////
-        var options = {
-            valueNames: ["sub", "dep", "time"], // Define the classes or attributes you want to search and sort
-        };
-        var userList = new List("mail", options);
+        const mail = $(".mail-inbox");
+        const urls = mail.data("url");
+        fetchData(urls, (data) => {
+            // Process and update the chart with filtered data
+            createMail(data);
+        });
+
+        $(".mail-side .nav li a").on("click", function (e) {
+            var data = $(this).data("mail");
+            console.log(data);
+            // Construct the URL with filter parameters
+            const url = mail.data("url") + `?data=${data}`;
+
+            fetchData(url, (data) => {
+                // Process and update the chart with filtered data
+                console.log(data);
+                createMail(data);
+            });
+        });
 
         $("#flexCheckDefault").change(function () {
             // Check or uncheck all checkboxes in the mail list based on the main checkbox state
             $(".mail-list .form-check-input").prop("checked", this.checked);
         });
         // Individual checkbox change event
-        $(".mail-list .clearfix").click(function () { 
+        $(".mail-list .btn-warning").click(function () {
             const url = $(this).data("url");
-            
-            $.ajax({
-                url: url, // Replace with the actual URL of your controller action
-                method: 'GET',
-                success: function (data) {
-                    $('#mail-detail-open').html(data); // Assuming you have a container div with id 'card-container'
-                    $('#mail-detail-open').show();
-                },
-                error: function (error) {
-                    console.error('Error fetching details:', error);
-                }
+            get(url, (data) => {
+                $("#mail-detail-open").html(data); // Assuming you have a container div with id 'card-container'
+                $("#mail-detail-open").show();
             });
         });
 
@@ -511,11 +535,41 @@ const pageCode = {
                 $("#flexCheckDefault").prop("checked", false);
             }
         });
+        function createMail(data) {
+            $(".mail-inbox .mail-list ul").html(data.htmlContent);
+        }
+    },
+    Resume: function () {
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+                
+        submitFormWithAjax("#education_form", function (response) {
+            alert(response.message);
+        });
+        submitFormWithAjax("#career_form", function (response) {
+            alert(response.message);
+        });
+        submitFormWithAjax("#reference_form", function (response) {
+            alert(response.message);
+        });
+        submitFormWithAjax("#contact_form", function (response) {
+            alert(response.message);
+        });
+        submitFormWithAjax("#skill_form", function (response) {
+            alert(response.message);
+        });
+        submitFormWithAjax("#language_form", function (response) {
+            alert(response.message);
+        });
+        submitFormWithAjax("#interest_form", function (response) {
+            alert(response.message);
+        });
     },
     News: function () {
         // Initialize the DataTable
         var table = $("#email_list").DataTable();
-
     },
     ProjectsDetails: function () {
         // Function to update delete button state based on checkbox status
@@ -595,6 +649,70 @@ const pageCode = {
             alert(response);
         });
     },
+    Gallery: function () {
+        const gallery = $("#gallery");
+        const url = gallery.data("url");
+        fetchData(url, (data) => {
+            // Process and update the chart with filtered data
+            $("#gallery .gallery-loader").hide();
+            $("#gallery .card-body").html(data.cards);
+        });
+
+        // Event listener for checkbox changes
+        $("input.image-checkbox").change(function () {
+            updateDeleteButtonState();
+        });
+
+        // Event listener for delete button click
+        $("#deleteAllBtn").click(function () {
+            deleteSelectedImages();
+        });
+
+        $("#galleryFilter .btn").on("click", function (e) {
+            var data = $(this).data("filter");
+            // Construct the URL with filter parameters
+            const url = gallery.data("url") + `?images=${data}`;
+            fetchData(url, (data) => {
+                // Process and update the chart with filtered data
+                $("#gallery .gallery-loader").hide();
+                $("#gallery .card-body").html(data.cards);
+            });
+        });
+
+        // Function to update the state of the delete button
+        function updateDeleteButtonState() {
+            var checkedCheckboxes = $("input.image-checkbox:checked");
+            var deleteAllBtn = $("#deleteAllBtn");
+
+            if (checkedCheckboxes.length > 0) {
+                // Enable the delete button
+                deleteAllBtn.removeAttr("disabled");
+            } else {
+                // Disable the delete button
+                deleteAllBtn.attr("disabled", "disabled");
+            }
+        }
+
+        // Function to delete selected images
+        function deleteSelectedImages() {
+            var selectedImages = [];
+            $(".image-checkbox:checked").each(function () {
+                selectedImages.push($(this).val());
+            });
+
+            var deleteAllUrl = $("#deleteAllBtn").data("url");
+
+            // Make an AJAX request using the postData function
+            postData(
+                deleteAllUrl,
+                { images: selectedImages, _token: "{{ csrf_token() }}" },
+                function (response) {
+                    // Handle success (optional)
+                    console.log(response);
+                }
+            );
+        }
+    },
     // Add more pages and their corresponding functions as needed
 };
 
@@ -613,7 +731,8 @@ $(document).ready(function () {
     $(".dropify").dropify();
     // Sumernote text input
     $("#summernote").summernote({
-        placeholder: "The toolbar can be customized and it also supports various callbacks such as <code>oninit</code>, <code>onfocus</code>, <code>onpaste</code> and many more.",
+        placeholder:
+            "The toolbar can be customized and it also supports various callbacks such as <code>oninit</code>, <code>onfocus</code>, <code>onpaste</code> and many more.",
         tabsize: 2,
         height: 120,
     });
@@ -627,7 +746,14 @@ $(document).ready(function () {
     }
     console.log(pageTitle);
     var routeToDelete;
-
+    var create = $(".notifications").data("url");
+    get(create, function (data) {
+        $(".notifications .notification").html(data); // Assuming you have a container div with id 'card-container'
+    });
+    var notification = $(".notifications").data("create");
+    get(notification, function (data) {
+        console.log(data);
+    });
     // Show delete confirmation modal when a delete button is clicked
     $(".delete-item").click(function () {
         routeToDelete = $(this).data("route");
@@ -641,7 +767,35 @@ $(document).ready(function () {
         routeToDelete = $(this).data("route");
         $("#deleteConfirmationModal").modal("show");
     });
+    $("#project_list").on("click", "td button.delete-item", function (e) {
+        routeToDelete = $(this).data("route");
+        $("#deleteConfirmationModal").modal("show");
+    });
+    $("#project_list").on("click", "td button.favorite", function (e) {
+        var fetchRoute = $(this).data("route");
+        var postRoute = $(this).data("post");
+        fetchData(fetchRoute, (data) => {
+            // Make an AJAX request with the "PUT" method
+            var formData = new FormData();
+            // formData.append("_method", "PUT"); // Add the "_method" field with the value "PUT"
+            formData.append("project", data.project_title);
+            formData.append("image", data.project_image);
+            formData.append("description", data.project_description);
+            formData.append("project_type", data.project_type);
+            postData(postRoute, formData, function (data) {
+                alert(data);
+                console.log(data);
+            });
+        });
+    });
+    // Event listener for button clicks
+    $(".btn-group .btn").click(function () {
+        // Remove the "active" class from all buttons
+        $(".btn-group .btn").removeClass("active");
 
+        // Add the "active" class to the clicked button
+        $(this).addClass("active");
+    });
     // Handle the delete button in the modal
     $("#confirmDelete").click(function () {
         // Send an AJAX request to delete the item using the routeToDelete
@@ -711,6 +865,19 @@ function postData(url, data, callback) {
     });
 }
 
+function get(url, callback) {
+    $.ajax({
+        url: url, // Replace with the actual URL of your controller action
+        method: "GET",
+        success: function (data) {
+            callback(data);
+        },
+        error: function (error) {
+            console.error("Error fetching details:", error);
+            showAlert("error", "Error fetching details:", error);
+        },
+    });
+}
 function fetchData(url, callback) {
     fetch(url)
         .then((response) => {

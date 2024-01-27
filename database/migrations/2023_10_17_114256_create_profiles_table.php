@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->string('city')->nullable();
             $table->string('county')->nullable();
             $table->string('country')->nullable();
+            $table->enum('visibility', ['public', 'private'])->default('private');
             $table->string('website')->nullable(); // Nullable for an optional website
             $table->unsignedBigInteger('profileable_id')->nullable()->default(null);
             $table->string('profileable_type')->nullable()->default(null);

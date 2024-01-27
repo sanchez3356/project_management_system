@@ -41,75 +41,20 @@
                     <a href="{{ route('Inboxes.index') }}" class="icon-menu"><i class="fa fa-envelope"></i><span
                             class="notification-dot"></span></a>
                 </li>
-                <li class="dropdown">
+                <li class="dropdown notifications" data-url="{{ route('notifications.index') }}"
+                    data-create="{{ route('notifications.edit', Auth::user()->id) }}">
                     <a class="dropdown-toggle icon-menu" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <i class="fa fa-bell"></i>
                         <span class="notification-dot"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end p-0 shadow notification">
-                        <ul class="list-unstyled feeds_widget">
-                            <li class="d-flex">
-                                <div class="feeds-left">
-                                    <i class="fa fa-thumbs-o-up"></i>
-                                </div>
-                                <div class="feeds-body flex-grow-1">
-                                    <h6 class="mb-1">
-                                        7 New Feedback
-                                        <small class="float-end text-muted small">Today</small>
-                                    </h6>
-                                    <span class="text-muted">It will give a smart finishing to your
-                                        site</span>
-                                </div>
-                            </li>
-                            <li class="d-flex">
-                                <div class="feeds-left">
-                                    <i class="fa fa-user"></i>
-                                </div>
-                                <div class="feeds-body flex-grow-1">
-                                    <h6 class="mb-1">
-                                        New User
-                                        <small class="float-end text-muted small">10:45</small>
-                                    </h6>
-                                    <span class="text-muted">I feel great! Thanks team</span>
-                                </div>
-                            </li>
-                            <li class="d-flex">
-                                <div class="feeds-left">
-                                    <i class="fa fa-question-circle"></i>
-                                </div>
-                                <div class="feeds-body flex-grow-1">
-                                    <h6 class="mb-1 text-warning">
-                                        Server Warning
-                                        <small class="float-end text-muted small">10:50</small>
-                                    </h6>
-                                    <span class="text-muted">Your connection is not private</span>
-                                </div>
-                            </li>
-                            <li class="d-flex">
-                                <div class="feeds-left">
-                                    <i class="fa fa-check"></i>
-                                </div>
-                                <div class="feeds-body flex-grow-1">
-                                    <h6 class="mb-1 text-danger">
-                                        Issue Fixed
-                                        <small class="float-end text-muted small">11:05</small>
-                                    </h6>
-                                    <span class="text-muted">WE have fix all Design bug with Responsive</span>
-                                </div>
-                            </li>
-                            <li class="d-flex">
-                                <div class="feeds-left">
-                                    <i class="fa fa-shopping-basket"></i>
-                                </div>
-                                <div class="feeds-body flex-grow-1">
-                                    <h6 class="mb-1">
-                                        7 New Orders
-                                        <small class="float-end text-muted small">11:35</small>
-                                    </h6>
-                                    <span class="text-muted">You received a new oder from Tina.</span>
-                                </div>
-                            </li>
+                        <ul class="list-unstyled feeds_widget feeds_loader">
+                            <li class="skeleton-loader-item w-100"></li>
+                            <li class="skeleton-loader-item w-100"></li>
+                            <li class="skeleton-loader-item w-100"></li>
+                            <li class="skeleton-loader-item w-100"></li>
+                            <li class="skeleton-loader-item w-100"></li>
                         </ul>
                     </div>
                 </li>
